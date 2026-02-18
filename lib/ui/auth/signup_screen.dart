@@ -278,7 +278,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         ],
                       ),
 
-                      const Spacer(),
+                      SizedBox(height: 24.h),
 
                       // ── Login Link ──────────────────────────────────────
                       Center(
