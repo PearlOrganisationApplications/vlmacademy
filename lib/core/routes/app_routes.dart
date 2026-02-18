@@ -45,8 +45,8 @@ class AppRoutes {
       case otp:
         final args = settings.arguments as Map<String, dynamic>?;
         return MaterialPageRoute(
-          builder: (_) => OTPScreen(
-            phoneNumber: args?['phoneNumber'] ?? '',
+          builder: (_) => OtpScreen(
+            contactInfo: args?['phoneNumber'] ?? '',
           ),
         );
 

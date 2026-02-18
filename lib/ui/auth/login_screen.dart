@@ -56,149 +56,144 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 24.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: 64.h),
-
-              // Logo
-              _LogoBadge(),
-
-              SizedBox(height: 40.h),
-
-              // Headline
-              Text(
-                'Learning Never Sleeps\nat VLM Academy',
-                style: AppTextStyles.h3.copyWith(
-                  color: AppColors.textPrimaryDark,
-                  fontWeight: FontWeight.bold,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight,
                 ),
-                textAlign: TextAlign.center,
-              ),
+                child: IntrinsicHeight(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 64.h),
 
-              SizedBox(height: 40.h),
+                      // Logo
+                      const _LogoBadge(),
 
-              // Role tabs
-              _RoleTabs(
-                selected: _selectedRole,
-                onChanged: (r) => setState(() => _selectedRole = r),
-              ),
+                      SizedBox(height: 40.h),
 
-              SizedBox(height: 32.h),
-
-              // Phone input + Send OTP
-              _PhoneRow(
-                controller: _phoneController,
-                isLoading: _isLoading,
-                onSend: _onSendOtp,
-              ),
-
-              SizedBox(height: 28.h),
-
-              // Divider
-              Row(
-                children: [
-                  const Expanded(
-                    child: Divider(color: AppColors.borderDark, thickness: 1),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12.w),
-                    child: Text(
-                      'Or continue with',
-                      style: AppTextStyles.bodySmall.copyWith(
-                        color: AppColors.textSecondaryDark,
+                      // Headline
+                      Text(
+                        'Learning Never Sleeps\nat VLM Academy',
+                        style: AppTextStyles.h3.copyWith(
+                          color: AppColors.textPrimaryDark,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                    ),
-                  ),
-                  const Expanded(
-                    child: Divider(color: AppColors.borderDark, thickness: 1),
-                  ),
-                ],
-              ),
 
-              SizedBox(height: 28.h),
+                      SizedBox(height: 40.h),
 
-              // Google Sign-In — dark surface, use asset icon
-              CustomButton(
-                text: 'Sign in with Google',
-                onPressed: _onGoogleSignIn,
-                type: ButtonType.gradient,
-                size: ButtonSize.large,
-                imageIcon: AppImages.googleIcon,
-                showTrailingArrow: true,
-                gradient: LinearGradient(
-                  colors: [AppColors.surfaceDark, AppColors.surfaceDark],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                ),
-                fullWidth: true,
-              ),
-
-              SizedBox(height: 16.h),
-
-              // GitHub Sign-In
-              CustomButton(
-                text: 'Sign in with GitHub',
-                onPressed: () {}, // Add logic later
-                type: ButtonType.gradient,
-                size: ButtonSize.large,
-                icon: Icons.code, // Fallback icon for now
-                showTrailingArrow: true,
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xFF24292E),
-                    Color(0xFF24292E)
-                  ], // GitHub dark color
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                ),
-                fullWidth: true,
-              ),
-
-              SizedBox(height: 16.h),
-
-              // Sign in with Account — blue gradient
-              CustomButton(
-                text: 'Sign in with Your Account',
-                onPressed: _onSignInWithAccount,
-                type: ButtonType.gradient,
-                size: ButtonSize.large,
-                icon: Icons.person_outline_rounded,
-                showTrailingArrow: true,
-                fullWidth: true,
-              ),
-
-              SizedBox(height: 36.h),
-
-              // Sign Up link
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Don't have an Account? ",
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.textSecondaryDark,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: _onSignUp,
-                    child: Text(
-                      'SIGN UP',
-                      style: AppTextStyles.bodySmall.copyWith(
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.5,
+                      // Role tabs
+                      _RoleTabs(
+                        selected: _selectedRole,
+                        onChanged: (r) => setState(() => _selectedRole = r),
                       ),
-                    ),
-                  ),
-                ],
-              ),
 
-              SizedBox(height: 32.h),
-            ],
-          ),
+                      SizedBox(height: 32.h),
+
+                      // Phone input + Send OTP
+                      _PhoneRow(
+                        controller: _phoneController,
+                        isLoading: _isLoading,
+                        onSend: _onSendOtp,
+                      ),
+
+                      SizedBox(height: 56.h),
+
+                      // Divider
+                      Row(
+                        children: [
+                          const Expanded(
+                            child: Divider(
+                                color: AppColors.borderDark, thickness: 1),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 12.w),
+                            child: Text(
+                              'Or continue with',
+                              style: AppTextStyles.bodySmall.copyWith(
+                                color: AppColors.textSecondaryDark,
+                              ),
+                            ),
+                          ),
+                          const Expanded(
+                            child: Divider(
+                                color: AppColors.borderDark, thickness: 1),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(height: 28.h),
+
+                      // Google Sign-In — dark surface, use asset icon
+                      CustomButton(
+                        text: 'Sign in with Google',
+                        onPressed: _onGoogleSignIn,
+                        type: ButtonType.gradient,
+                        size: ButtonSize.large,
+                        imageIcon: AppImages.googleIcon,
+                        showTrailingArrow: true,
+                        gradient: const LinearGradient(
+                          colors: [
+                            AppColors.surfaceDark,
+                            AppColors.surfaceDark
+                          ],
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                        ),
+                        fullWidth: true,
+                      ),
+
+                      SizedBox(height: 16.h),
+
+                      // Sign in with Account — blue gradient
+                      CustomButton(
+                        text: 'Sign in with Your Account',
+                        onPressed: _onSignInWithAccount,
+                        type: ButtonType.gradient,
+                        size: ButtonSize.large,
+                        icon: Icons.person_outline_rounded,
+                        showTrailingArrow: true,
+                        fullWidth: true,
+                      ),
+
+                      const Spacer(),
+
+                      // Sign Up link
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Don't have an Account? ",
+                            style: AppTextStyles.bodySmall.copyWith(
+                              color: AppColors.textSecondaryDark,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: _onSignUp,
+                            child: Text(
+                              'SIGN UP',
+                              style: AppTextStyles.bodySmall.copyWith(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(height: 32.h),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
@@ -208,6 +203,8 @@ class _LoginScreenState extends State<LoginScreen> {
 // ─── Logo Badge ───────────────────────────────────────────────────────────────
 
 class _LogoBadge extends StatelessWidget {
+  const _LogoBadge();
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -348,26 +345,31 @@ class _PhoneRow extends StatelessWidget {
                         color: AppColors.textSecondaryDark,
                       ),
                       border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
                       counterText: '',
                       isDense: true,
                       contentPadding: EdgeInsets.zero,
                     ),
                   ),
                 ),
+                // Send OTP — reuse CustomButton gradient type
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                  child: CustomButton(
+                    text: 'Send otp',
+                    onPressed: isLoading ? null : onSend,
+                    type: ButtonType.gradient,
+                    size: ButtonSize.medium,
+                    isLoading: isLoading,
+                  ),
+                ),
               ],
             ),
           ),
-        ),
-
-        SizedBox(width: 10.w),
-
-        // Send OTP — reuse CustomButton gradient type
-        CustomButton(
-          text: 'Send otp',
-          onPressed: isLoading ? null : onSend,
-          type: ButtonType.gradient,
-          size: ButtonSize.large,
-          isLoading: isLoading,
         ),
       ],
     );

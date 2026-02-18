@@ -23,9 +23,10 @@ class CustomButton extends StatelessWidget {
   final IconData? icon;
   final bool fullWidth;
 
-  // Gradient-specific options
+  // Gradient and icon options
   final LinearGradient? gradient;
   final bool showTrailingArrow;
+  final String? imageIcon;
 
   const CustomButton({
     super.key,
@@ -38,6 +39,7 @@ class CustomButton extends StatelessWidget {
     this.fullWidth = false,
     this.gradient,
     this.showTrailingArrow = false,
+    this.imageIcon,
   });
 
   // ─── Gradient button ────────────────────────────────────────────────────────
@@ -50,10 +52,12 @@ class CustomButton extends StatelessWidget {
         onPressed: isLoading ? null : onPressed,
         isLoading: isLoading,
         icon: icon,
+        imageIcon: imageIcon,
         gradient: gradient ?? AppColors.primaryGradient,
         showTrailingArrow: showTrailingArrow,
         height: _buttonHeight,
         textStyle: _getTextStyle(),
+        fullWidth: fullWidth,
       );
     }
 
@@ -80,7 +84,10 @@ class CustomButton extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (icon != null) ...[
+              if (imageIcon != null) ...[
+                Image.asset(imageIcon!, width: 22.sp, height: 22.sp),
+                SizedBox(width: 8.w),
+              ] else if (icon != null) ...[
                 Icon(icon, size: 20),
                 const SizedBox(width: 8),
               ],
@@ -197,15 +204,19 @@ class _GradientButton extends StatelessWidget {
     this.onPressed,
     this.isLoading = false,
     this.icon,
+    this.imageIcon,
     this.showTrailingArrow = false,
+    this.fullWidth = false,
   });
 
   final String text;
   final VoidCallback? onPressed;
   final bool isLoading;
   final IconData? icon;
+  final String? imageIcon;
   final LinearGradient gradient;
   final bool showTrailingArrow;
+  final bool fullWidth;
   final double height;
   final TextStyle textStyle;
 
@@ -214,7 +225,7 @@ class _GradientButton extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        width: double.infinity,
+        width: fullWidth ? double.infinity : null,
         height: height,
         decoration: BoxDecoration(
           gradient: gradient,
@@ -232,35 +243,56 @@ class _GradientButton extends StatelessWidget {
                 ),
               )
             : Row(
+                mainAxisSize: fullWidth ? MainAxisSize.max : MainAxisSize.min,
                 children: [
-                  SizedBox(width: 20.w),
-                  if (icon != null)
+                  SizedBox(width: 12.w),
+                  if (imageIcon != null) ...[
+                    Image.asset(imageIcon!, width: 22.sp, height: 22.sp),
+                    if (!fullWidth) SizedBox(width: 8.w),
+                  ] else if (icon != null) ...[
                     Icon(icon, size: 22.sp, color: Colors.white),
-                  Expanded(
-                    child: Text(
-                      text,
-                      textAlign: TextAlign.center,
-                      style: textStyle.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
+                    if (!fullWidth) SizedBox(width: 8.w),
+                  ],
+                  if (fullWidth)
+                    Expanded(
+                      child: Text(
+                        text,
+                        textAlign: TextAlign.center,
+                        style: textStyle.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    )
+                  else
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12.w),
+                      child: Text(
+                        text,
+                        textAlign: TextAlign.center,
+                        style: textStyle.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
-                  ),
-                  if (showTrailingArrow)
+                  if (showTrailingArrow) ...[
+                    if (!fullWidth) SizedBox(width: 8.w),
                     Container(
                       width: 34.w,
                       height: 34.w,
                       margin: EdgeInsets.only(right: 12.w),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         Icons.arrow_forward_rounded,
                         size: 16.sp,
-                        color: Colors.white,
+                        color: AppColors.primary,
                       ),
                     ),
+                  ],
                 ],
               ),
       ),
