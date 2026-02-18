@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../core/constants/app_images.dart';
 import '../../core/routes/app_routes.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
@@ -119,16 +120,37 @@ class _LoginScreenState extends State<LoginScreen> {
 
               SizedBox(height: 28.h),
 
-              // Google Sign-In — dark surface, no gradient
+              // Google Sign-In — dark surface, use asset icon
               CustomButton(
                 text: 'Sign in with Google',
                 onPressed: _onGoogleSignIn,
                 type: ButtonType.gradient,
                 size: ButtonSize.large,
-                icon: Icons.g_mobiledata_rounded,
+                imageIcon: AppImages.googleIcon,
                 showTrailingArrow: true,
                 gradient: LinearGradient(
                   colors: [AppColors.surfaceDark, AppColors.surfaceDark],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
+                fullWidth: true,
+              ),
+
+              SizedBox(height: 16.h),
+
+              // GitHub Sign-In
+              CustomButton(
+                text: 'Sign in with GitHub',
+                onPressed: () {}, // Add logic later
+                type: ButtonType.gradient,
+                size: ButtonSize.large,
+                icon: Icons.code, // Fallback icon for now
+                showTrailingArrow: true,
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xFF24292E),
+                    Color(0xFF24292E)
+                  ], // GitHub dark color
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                 ),
