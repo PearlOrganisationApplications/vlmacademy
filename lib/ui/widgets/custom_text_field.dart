@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../core/theme/app_colors.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -16,6 +17,7 @@ class CustomTextField extends StatelessWidget {
   final bool enabled;
   final List<TextInputFormatter>? inputFormatters;
   final void Function(String)? onChanged;
+  final bool darkMode;
 
   const CustomTextField({
     super.key,
@@ -32,22 +34,44 @@ class CustomTextField extends StatelessWidget {
     this.enabled = true,
     this.inputFormatters,
     this.onChanged,
+    this.darkMode = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    final labelColor =
+        darkMode ? AppColors.textSecondaryDark : AppColors.textPrimaryLight;
+    final inputColor =
+        darkMode ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
+    final hintColor =
+        darkMode ? AppColors.textSecondaryDark : AppColors.textSecondaryLight;
+    final iconColor =
+        darkMode ? AppColors.textSecondaryDark : AppColors.textSecondaryLight;
+
+    final enabledBorder = darkMode
+        ? UnderlineInputBorder(
+            borderSide: BorderSide(color: AppColors.borderDark, width: 1.0))
+        : const UnderlineInputBorder(
+            borderSide: BorderSide(color: AppColors.borderLight, width: 1.0));
+    final focusedBorder = darkMode
+        ? UnderlineInputBorder(
+            borderSide: BorderSide(color: AppColors.primary, width: 1.5))
+        : const UnderlineInputBorder(
+            borderSide: BorderSide(color: AppColors.primary, width: 1.5));
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: AppColors.textPrimaryLight,
+        if (label.isNotEmpty)
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 13.sp,
+              fontWeight: FontWeight.w500,
+              color: labelColor,
+            ),
           ),
-        ),
-        const SizedBox(height: 8),
+        if (label.isNotEmpty) SizedBox(height: 8.h),
         TextFormField(
           controller: controller,
           validator: validator,
@@ -58,11 +82,26 @@ class CustomTextField extends StatelessWidget {
           enabled: enabled,
           inputFormatters: inputFormatters,
           onChanged: onChanged,
+          style: TextStyle(color: inputColor, fontSize: 14.sp),
           decoration: InputDecoration(
             hintText: hint,
-            prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
+            hintStyle: TextStyle(color: hintColor, fontSize: 14.sp),
+            prefixIcon: prefixIcon != null
+                ? Icon(prefixIcon, size: 18.sp, color: iconColor)
+                : null,
             suffixIcon: suffixIcon,
             counterText: '',
+            border: InputBorder.none, // Remove default border
+            enabledBorder: enabledBorder,
+            focusedBorder: focusedBorder,
+            errorBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: AppColors.error, width: 1.0),
+            ),
+            focusedErrorBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: AppColors.error, width: 1.5),
+            ),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 12.h, horizontal: 4.w),
           ),
         ),
       ],

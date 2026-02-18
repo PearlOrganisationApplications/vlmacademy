@@ -3,6 +3,8 @@ import '../../ui/shared/splash_screen.dart';
 import '../../ui/shared/onboarding_screen.dart';
 import '../../ui/auth/login_screen.dart';
 import '../../ui/auth/otp_screen.dart';
+import '../../ui/auth/email_login_screen.dart';
+import '../../ui/auth/signup_screen.dart';
 import '../../ui/student/student_dashboard.dart';
 import '../../ui/student/learning_screen.dart';
 import '../../ui/student/tests_screen.dart';
@@ -18,6 +20,8 @@ class AppRoutes {
   // Auth routes
   static const String login = '/login';
   static const String otp = '/otp';
+  static const String emailLogin = '/email-login';
+  static const String signup = '/signup';
   static const String roleSelection = '/role-selection';
 
   // Student routes
@@ -49,6 +53,12 @@ class AppRoutes {
             contactInfo: args?['phoneNumber'] ?? '',
           ),
         );
+
+      case emailLogin:
+        return MaterialPageRoute(builder: (_) => const EmailLoginScreen());
+
+      case signup:
+        return MaterialPageRoute(builder: (_) => const SignupScreen());
 
       case studentDashboard:
         return MaterialPageRoute(builder: (_) => const StudentDashboard());

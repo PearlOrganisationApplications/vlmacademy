@@ -44,8 +44,13 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _onGoogleSignIn() {}
-  void _onSignInWithAccount() {}
-  void _onSignUp() {}
+  void _onSignInWithAccount() {
+    Navigator.pushNamed(context, AppRoutes.emailLogin);
+  }
+
+  void _onSignUp() {
+    Navigator.pushNamed(context, AppRoutes.signup);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       SizedBox(height: 28.h),
 
-                      // Google Sign-In — dark surface, use asset icon
+                      // Google Sign-In — primary gradient
                       CustomButton(
                         text: 'Sign in with Google',
                         onPressed: _onGoogleSignIn,
@@ -137,14 +142,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         size: ButtonSize.large,
                         imageIcon: AppImages.googleIcon,
                         showTrailingArrow: true,
-                        gradient: const LinearGradient(
-                          colors: [
-                            AppColors.surfaceDark,
-                            AppColors.surfaceDark
-                          ],
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                        ),
                         fullWidth: true,
                       ),
 
@@ -152,7 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       // Sign in with Account — blue gradient
                       CustomButton(
-                        text: 'Sign in with Your Account',
+                        text: 'Sign in with Email',
                         onPressed: _onSignInWithAccount,
                         type: ButtonType.gradient,
                         size: ButtonSize.large,
@@ -196,48 +193,6 @@ class _LoginScreenState extends State<LoginScreen> {
           },
         ),
       ),
-    );
-  }
-}
-
-// ─── Logo Badge ───────────────────────────────────────────────────────────────
-
-class _LogoBadge extends StatelessWidget {
-  const _LogoBadge();
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10.r),
-          ),
-          child: Text(
-            'VLM',
-            style: AppTextStyles.h5.copyWith(
-              color: AppColors.backgroundDark,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1,
-            ),
-          ),
-        ),
-        SizedBox(width: 8.w),
-        ShaderMask(
-          shaderCallback: (bounds) =>
-              AppColors.primaryGradient.createShader(bounds),
-          child: Text(
-            'Academy',
-            style: AppTextStyles.h5.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
@@ -372,6 +327,28 @@ class _PhoneRow extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+// ─── Logo Badge ───────────────────────────────────────────────────────────────
+
+class _LogoBadge extends StatelessWidget {
+  const _LogoBadge();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 80.w,
+      height: 80.h,
+      child: Center(
+        child: Image.asset(
+          AppImages.vlmLogo,
+          width: 80.w,
+          height: 80.h,
+          fit: BoxFit.fill,
+        ),
+      ),
     );
   }
 }
