@@ -18,6 +18,8 @@ class CourseModel {
   final int viewCount;
   final double rating;
   final bool isPremium;
+  final int? price;
+  final bool isSaved;
 
   CourseModel({
     required this.id,
@@ -37,31 +39,37 @@ class CourseModel {
     this.viewCount = 0,
     this.rating = 0.0,
     this.isPremium = false,
+    this.price,
+    this.isSaved = false,
   });
 
   factory CourseModel.fromJson(Map<String, dynamic> json) {
     return CourseModel(
-      id: json['id'] as String,
-      title: json['title'] as String,
-      description: json['description'] as String,
-      teacherId: json['teacherId'] as String,
-      teacherName: json['teacherName'] as String,
+      id: json['id'] as String? ?? '',
+      title: json['title'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      teacherId: json['teacherId'] as String? ?? '',
+      teacherName: json['teacherName'] as String? ?? '',
       thumbnailUrl: json['thumbnailUrl'] as String?,
       videoUrl: json['videoUrl'] as String?,
       type: CourseType.values.firstWhere(
         (e) => e.toString() == 'CourseType.${json['type']}',
+        orElse: () => CourseType.recorded,
       ),
-      durationMinutes: json['durationMinutes'] as int,
-      subject: json['subject'] as String,
-      classLevel: json['classLevel'] as String,
+      durationMinutes: json['durationMinutes'] as int? ?? 0,
+      subject: json['subject'] as String? ?? '',
+      classLevel: json['classLevel'] as String? ?? '',
       tags: (json['tags'] as List<dynamic>?)?.cast<String>() ?? [],
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      createdAt: DateTime.tryParse(json['createdAt'] as String? ?? '') ??
+          DateTime.now(),
       scheduledAt: json['scheduledAt'] != null
-          ? DateTime.parse(json['scheduledAt'] as String)
+          ? DateTime.tryParse(json['scheduledAt'] as String)
           : null,
       viewCount: json['viewCount'] as int? ?? 0,
       rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
       isPremium: json['isPremium'] as bool? ?? false,
+      price: json['price'] as int?,
+      isSaved: json['isSaved'] as bool? ?? false,
     );
   }
 
@@ -84,6 +92,8 @@ class CourseModel {
       'viewCount': viewCount,
       'rating': rating,
       'isPremium': isPremium,
+      'price': price,
+      'isSaved': isSaved,
     };
   }
 }

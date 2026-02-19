@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
+
 import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_text_styles.dart';
-import '../../core/utils/formatters.dart';
-import '../../data/sources/mock_data_source.dart';
-import '../widgets/custom_card.dart';
+import '../widgets/custom_app_bar.dart';
+import 'home_screen.dart';
+import 'learning_screen.dart';
+import 'tests_screen.dart';
+import 'wallet_screen.dart';
+import 'profile_screen.dart';
 
 class StudentDashboard extends StatefulWidget {
   const StudentDashboard({super.key});
@@ -13,330 +18,196 @@ class StudentDashboard extends StatefulWidget {
 }
 
 class _StudentDashboardState extends State<StudentDashboard> {
-  int _currentIndex = 0;
+  late final PersistentTabController _controller;
+  late final List<Widget> _screens;
 
-  void _onTabTapped(int index) {
-    setState(() => _currentIndex = index);
-    
-    switch (index) {
-      case 0:
-        // Already on home
-        break;
-      case 1:
-        Navigator.pushNamed(context, '/student/learning');
-        break;
-      case 2:
-        Navigator.pushNamed(context, '/student/tests');
-        break;
-      case 3:
-        Navigator.pushNamed(context, '/student/wallet');
-        break;
-      case 4:
-        Navigator.pushNamed(context, '/student/profile');
-        break;
+  int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = PersistentTabController(initialIndex: 0);
+
+    _screens = const [
+      HomeScreen(),
+      LearningScreen(),
+      TestsScreen(),
+      WalletScreen(),
+      ProfileScreen(),
+    ];
+
+    _controller.addListener(_handleTabChange);
+  }
+
+  void _handleTabChange() {
+    if (_selectedIndex != _controller.index) {
+      setState(() {
+        _selectedIndex = _controller.index;
+      });
     }
   }
 
   @override
-  Widget build(BuildContext context) {
-    final wallet = MockDataSource.getMockWallet('1');
-    final streak = MockDataSource.getMockStreak('1');
-    final courses = MockDataSource.mockCourses;
+  void dispose() {
+    _controller.removeListener(_handleTabChange);
+    _controller.dispose();
+    super.dispose();
+  }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('VLM Academy'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.person_outline),
-            onPressed: () {},
-          ),
-        ],
+  List<PersistentBottomNavBarItem> _navBarItems() {
+    return [
+      _buildNavItem(
+        title: "HOME",
+        icon: FontAwesomeIcons.house,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Welcome Section
-            Text(
-              'Welcome back, Rahul! 👋',
-              style: AppTextStyles.h4,
-            ),
-            const SizedBox(height: 16),
-
-            // Wallet & Streak Cards
-            Row(
-              children: [
-                Expanded(
-                  child: CustomCard(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                gradient: AppColors.walletGradient,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Icon(
-                                Icons.account_balance_wallet,
-                                color: Colors.white,
-                                size: 20,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Text('Wallet', style: AppTextStyles.labelMedium),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          Formatters.currency(wallet.balance),
-                          style: AppTextStyles.h4.copyWith(
-                            color: AppColors.walletGreen,
-                          ),
-                        ),
-                        Text(
-                          '${wallet.rewardPoints} points',
-                          style: AppTextStyles.caption.copyWith(
-                            color: AppColors.textSecondaryLight,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: CustomCard(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: AppColors.streakOrange.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Icon(
-                                Icons.local_fire_department,
-                                color: AppColors.streakOrange,
-                                size: 20,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Text('Streak', style: AppTextStyles.labelMedium),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          '${streak.currentStreak} days',
-                          style: AppTextStyles.h4.copyWith(
-                            color: AppColors.streakOrange,
-                          ),
-                        ),
-                        Text(
-                          'Best: ${streak.longestStreak} days',
-                          style: AppTextStyles.caption.copyWith(
-                            color: AppColors.textSecondaryLight,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-
-            // Quick Actions
-            Text('Quick Actions', style: AppTextStyles.h5),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                _QuickActionCard(
-                  icon: Icons.play_circle_outline,
-                  label: 'Learn',
-                  color: AppColors.primary,
-                  onTap: () {
-                    Navigator.pushNamed(context, '/student/learning');
-                  },
-                ),
-                const SizedBox(width: 12),
-                _QuickActionCard(
-                  icon: Icons.quiz_outlined,
-                  label: 'Tests',
-                  color: AppColors.secondary,
-                  onTap: () {
-                    Navigator.pushNamed(context, '/student/tests');
-                  },
-                ),
-                const SizedBox(width: 12),
-                _QuickActionCard(
-                  icon: Icons.live_tv,
-                  label: 'Live Class',
-                  color: AppColors.error,
-                  onTap: () {
-                    Navigator.pushNamed(context, '/student/learning');
-                  },
-                ),
-                const SizedBox(width: 12),
-                _QuickActionCard(
-                  icon: Icons.chat_bubble_outline,
-                  label: 'Doubts',
-                  color: AppColors.accent,
-                  onTap: () {},
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-
-            // Continue Learning
-            Text('Continue Learning', style: AppTextStyles.h5),
-            const SizedBox(height: 12),
-            ...courses.map((course) => Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: CustomCard(
-                    onTap: () {},
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 80,
-                          height: 80,
-                          decoration: BoxDecoration(
-                            gradient: AppColors.primaryGradient,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Icon(
-                            Icons.play_circle_fill,
-                            color: Colors.white,
-                            size: 32,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                course.title,
-                                style: AppTextStyles.labelLarge,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                course.teacherName,
-                                style: AppTextStyles.caption.copyWith(
-                                  color: AppColors.textSecondaryLight,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.access_time,
-                                    size: 14,
-                                    color: AppColors.textSecondaryLight,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    Formatters.duration(course.durationMinutes),
-                                    style: AppTextStyles.caption.copyWith(
-                                      color: AppColors.textSecondaryLight,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  const Icon(
-                                    Icons.star,
-                                    size: 14,
-                                    color: AppColors.rewardGold,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    course.rating.toString(),
-                                    style: AppTextStyles.caption.copyWith(
-                                      color: AppColors.textSecondaryLight,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                )),
-          ],
+      _buildNavItem(
+        title: "MY COURSES",
+        icon: FontAwesomeIcons.bookOpen,
+      ),
+      PersistentBottomNavBarItem(
+        title: "TESTS",
+        icon: _buildCenterButton(),
+        activeColorPrimary: AppColors.primary,
+        inactiveColorPrimary: AppColors.textSecondaryLight,
+        textStyle: const TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 10,
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _currentIndex,
-        selectedItemColor: AppColors.primary,
-        unselectedItemColor: AppColors.textSecondaryLight,
-        onTap: _onTabTapped,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.school), label: 'Learn'),
-          BottomNavigationBarItem(icon: Icon(Icons.quiz), label: 'Tests'),
-          BottomNavigationBarItem(icon: Icon(Icons.wallet), label: 'Wallet'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-        ],
+      _buildNavItem(
+        title: "TRANSACTION",
+        icon: FontAwesomeIcons.wallet,
+      ),
+      _buildNavItem(
+        title: "PROFILE",
+        icon: FontAwesomeIcons.user,
+      ),
+    ];
+  }
+
+  PersistentBottomNavBarItem _buildNavItem({
+    required String title,
+    required IconData icon,
+  }) {
+    return PersistentBottomNavBarItem(
+      title: title,
+      icon: FaIcon(icon, size: 20),
+      activeColorPrimary: AppColors.primary,
+      inactiveColorPrimary: AppColors.textSecondaryLight,
+      textStyle: const TextStyle(
+        fontWeight: FontWeight.w600,
+        fontSize: 10,
       ),
     );
   }
-}
 
-class _QuickActionCard extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Color color;
-  final VoidCallback onTap;
-
-  const _QuickActionCard({
-    required this.icon,
-    required this.label,
-    required this.color,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: CustomCard(
-        onTap: onTap,
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(icon, color: color, size: 24),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              label,
-              style: AppTextStyles.caption,
-              textAlign: TextAlign.center,
-            ),
-          ],
+  Widget _buildCenterButton() {
+    return Container(
+      width: 56,
+      height: 56,
+      decoration: BoxDecoration(
+        gradient: AppColors.primaryGradient,
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withOpacity(0.35),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
+          ),
+        ],
+        border: Border.all(color: Colors.white, width: 3),
+      ),
+      child: const Center(
+        child: FaIcon(
+          FontAwesomeIcons.play,
+          color: Colors.white,
+          size: 20,
         ),
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        if (_selectedIndex != 0) {
+          _controller.jumpToTab(0);
+          return false;
+        }
+        return true;
+      },
+      child: Scaffold(
+        appBar: _selectedIndex == 0
+            ? null
+            : CustomAppBar(
+                title: _getPageTitle(_selectedIndex),
+                actions: [
+                  IconButton(
+                    icon: const FaIcon(
+                      FontAwesomeIcons.bell,
+                      size: 18,
+                      color: AppColors.textPrimaryLight,
+                    ),
+                    onPressed: () {
+                      // TODO: Navigate to notifications
+                    },
+                  ),
+                ],
+              ),
+        body: PersistentTabView(
+          context,
+          controller: _controller,
+          screens: _screens,
+          items: _navBarItems(),
+          confineToSafeArea: true,
+          backgroundColor: AppColors.backgroundDark,
+          navBarHeight: kBottomNavigationBarHeight,
+          handleAndroidBackButtonPress: false,
+          resizeToAvoidBottomInset: true,
+          stateManagement: true,
+          hideNavigationBarWhenKeyboardAppears: true,
+          popBehaviorOnSelectedNavBarItemPress: PopBehavior.all,
+          animationSettings: const NavBarAnimationSettings(
+            navBarItemAnimation: ItemAnimationSettings(
+              duration: Duration(milliseconds: 200),
+              curve: Curves.easeInOut,
+            ),
+            screenTransitionAnimation: ScreenTransitionAnimationSettings(
+              animateTabTransition: true,
+              duration: Duration(milliseconds: 200),
+              curve: Curves.easeInOut,
+            ),
+          ),
+          decoration: const NavBarDecoration(
+            colorBehindNavBar: AppColors.backgroundDark,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 10,
+                offset: Offset(0, -2),
+              ),
+            ],
+          ),
+          navBarStyle: NavBarStyle.style15,
+        ),
+      ),
+    );
+  }
+
+  String _getPageTitle(int index) {
+    switch (index) {
+      case 1:
+        return 'My Courses';
+      case 2:
+        return 'Online Tests';
+      case 3:
+        return 'Transaction';
+      case 4:
+        return 'Profile';
+      default:
+        return 'VLM Academy';
+    }
   }
 }

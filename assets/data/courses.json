@@ -1,0 +1,65 @@
+[
+    {
+        "id": "1",
+        "title": "Thermodynamics",
+        "description": "Master the laws of heat and energy transfer.",
+        "teacherId": "t1",
+        "teacherName": "Dr. Smith",
+        "thumbnailUrl": "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=500&q=80",
+        "videoUrl": null,
+        "type": "recorded",
+        "durationMinutes": 120,
+        "subject": "Physics",
+        "classLevel": "12",
+        "tags": [
+            "Heat",
+            "Energy"
+        ],
+        "createdAt": "2024-01-01T10:00:00Z",
+        "viewCount": 7303,
+        "rating": 4.2,
+        "isPremium": true
+    },
+    {
+        "id": "2",
+        "title": "Chemical Kinetics",
+        "description": "Introduction to reaction rates and mechanisms.",
+        "teacherId": "t2",
+        "teacherName": "Prof. Miller",
+        "thumbnailUrl": "https://images.unsplash.com/photo-1532187875605-2fe358a71424?w=500&q=80",
+        "videoUrl": null,
+        "type": "recorded",
+        "durationMinutes": 90,
+        "subject": "Chemistry",
+        "classLevel": "11",
+        "tags": [
+            "Reactions",
+            "Kinetics"
+        ],
+        "createdAt": "2024-01-05T12:00:00Z",
+        "viewCount": 12680,
+        "rating": 3.9,
+        "isPremium": false
+    },
+    {
+        "id": "3",
+        "title": "Harappa Civilization",
+        "description": "Exploring the ancient Indus Valley ruins.",
+        "teacherId": "t3",
+        "teacherName": "Dr. Jones",
+        "thumbnailUrl": "https://images.unsplash.com/photo-1599590984817-0dc192408361?w=500&q=80",
+        "videoUrl": null,
+        "type": "recorded",
+        "durationMinutes": 60,
+        "subject": "History",
+        "classLevel": "10",
+        "tags": [
+            "Ancient",
+            "Ruins"
+        ],
+        "createdAt": "2024-01-10T09:00:00Z",
+        "viewCount": 10252,
+        "rating": 4.5,
+        "isPremium": true
+    }
+]
