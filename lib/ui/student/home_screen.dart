@@ -431,7 +431,7 @@ class HomeScreen extends StatelessWidget {
             coins: "450 Coins",
             players: "3,120",
             imageUrl:
-                "https://images.unsplash.com/photo-1532187875605-2fe358a71424?w=500&q=80",
+                "https://images.unsplash.com/photo-1576086213369-97a306d36557?w=500&q=80",
           ),
         ],
       ),

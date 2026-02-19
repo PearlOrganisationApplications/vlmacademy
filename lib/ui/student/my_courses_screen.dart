@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
+import 'course_lectures_screen.dart';
+import 'certificate_screen.dart';
 
 class MyCoursesScreen extends StatefulWidget {
   const MyCoursesScreen({super.key});
@@ -8,9 +11,10 @@ class MyCoursesScreen extends StatefulWidget {
 }
 
 class _MyCoursesScreenState extends State<MyCoursesScreen> {
-  bool isOngoing = true;
+  bool isOngoing =
+      false; // Set to false by default to show "Completed" as per requested screen update
 
-  final List<Map<String, dynamic>> _myCourses = [
+  final List<Map<String, dynamic>> _ongoingCourses = [
     {
       "title": "Intro to UI/UX Design",
       "category": "UI/UX Design",
@@ -57,8 +61,50 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
     }
   ];
 
+  final List<Map<String, dynamic>> _completedCourses = [
+    {
+      "title": "Graphic Design Advanced",
+      "category": "Graphic Design",
+      "rating": 4.2,
+      "duration": "2 Hrs 36 Mins",
+      "image":
+          "https://img.freepik.com/free-vector/creative-design-concept_1284-12961.jpg",
+      "isCompleted": true,
+    },
+    {
+      "title": "Advance Diploma in Gra..",
+      "category": "Graphic Design",
+      "rating": 4.7,
+      "duration": "3 Hrs 28 Mins",
+      "image":
+          "https://img.freepik.com/free-vector/isometric-online-certification-concept_23-2148576435.jpg",
+      "isCompleted": true,
+    },
+    {
+      "title": "Setup your Graphic Des..",
+      "category": "Digital Marketing",
+      "rating": 4.2,
+      "duration": "4 Hrs 05 Mins",
+      "image":
+          "https://img.freepik.com/free-photo/workplace-business-modern-office-accessories-laptop-mouse-keyboard-glasses-notebook-wooden-background_1150-13611.jpg",
+      "isCompleted": true,
+    },
+    {
+      "title": "Web Developer conce..",
+      "category": "Web Development",
+      "rating": 4.5, // Estimated rating
+      "duration": "2 Hrs 15 Mins", // Estimated duration
+      "image":
+          "https://img.freepik.com/free-vector/web-development-concept-with-programmer-working_23-2148817666.jpg",
+      "isCompleted": true,
+    }
+  ];
+
   @override
   Widget build(BuildContext context) {
+    List<Map<String, dynamic>> currentCourses =
+        isOngoing ? _ongoingCourses : _completedCourses;
+
     return Scaffold(
       backgroundColor: const Color(0xFF081426),
       body: SafeArea(
@@ -74,9 +120,9 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
             Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                itemCount: _myCourses.length,
+                itemCount: currentCourses.length,
                 itemBuilder: (context, index) {
-                  return _buildCourseCard(_myCourses[index]);
+                  return _buildCourseCard(currentCourses[index]);
                 },
               ),
             ),
@@ -93,8 +139,7 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
         children: [
           GestureDetector(
             onTap: () {
-              // Usually in a dashboard, back might not be visible unless it's a subpage.
-              // But the screenshot shows a back arrow.
+              Navigator.pop(context);
             },
             child: const Icon(Icons.arrow_back, color: Colors.white, size: 28),
           ),
@@ -132,6 +177,8 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                   hintText: "Search for ...",
                   hintStyle: TextStyle(color: Colors.white38, fontSize: 16),
                   border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
                 ),
               ),
             ),
@@ -158,7 +205,8 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
         height: 50,
         decoration: BoxDecoration(
           color: const Color(0xFF1B2A41),
-          borderRadius: BorderRadius.circular(15),
+          borderRadius:
+              BorderRadius.circular(25), // Rounded pill shape as per design
         ),
         child: Row(
           children: [
@@ -168,15 +216,15 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                 child: Container(
                   decoration: BoxDecoration(
                     color: !isOngoing
-                        ? const Color(0xFF263238)
-                        : Colors.transparent,
-                    borderRadius: BorderRadius.circular(15),
+                        ? const Color(0xFF1ABC9C)
+                        : Colors.transparent, // Teal color as per design
+                    borderRadius: BorderRadius.circular(25),
                   ),
-                  child: Center(
+                  child: const Center(
                     child: Text(
                       "Completed",
                       style: TextStyle(
-                        color: !isOngoing ? Colors.white : Colors.white60,
+                        color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
@@ -193,7 +241,7 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                     color: isOngoing
                         ? const Color(0xFF1ABC9C)
                         : Colors.transparent,
-                    borderRadius: BorderRadius.circular(15),
+                    borderRadius: BorderRadius.circular(25),
                   ),
                   child: Center(
                     child: Text(
@@ -215,117 +263,170 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
   }
 
   Widget _buildCourseCard(Map<String, dynamic> course) {
-    double progressPercent = course['progress'] / course['total'];
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      height: 110,
-      decoration: BoxDecoration(
-        color: const Color(0xFF1B2A41),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        children: [
-          // Course Image
-          ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(20),
-              bottomLeft: Radius.circular(20),
-            ),
-            child: Image.network(
-              course['image'],
-              width: 110,
-              height: 110,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Container(
-                width: 110,
-                height: 110,
-                color: Colors.blueGrey[800],
-                child: const Icon(Icons.image, color: Colors.white24),
-              ),
-            ),
-          ),
-          const SizedBox(width: 15),
-          // Course Details
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    course['category'],
-                    style: const TextStyle(
-                      color: Color(0xFF4A90E2),
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
+    bool isCompleted = course['isCompleted'] ?? false;
+
+    return GestureDetector(
+      onTap: () {
+        PersistentNavBarNavigator.pushNewScreen(
+          context,
+          screen: CourseLecturesScreen(course: course),
+          withNavBar: false,
+          pageTransitionAnimation: PageTransitionAnimation.cupertino,
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 20),
+        height: 120,
+        decoration: BoxDecoration(
+          color: const Color(0xFF1B2A41),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          children: [
+            // Course Image & Badge
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    bottomLeft: Radius.circular(20),
+                  ),
+                  child: Image.network(
+                    course['image'],
+                    width: 120,
+                    height: 120,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      width: 120,
+                      height: 120,
+                      color: Colors.blueGrey[800],
+                      child: const Icon(Icons.image, color: Colors.white24),
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    course['title'],
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
+                ),
+                if (isCompleted)
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF4A90E2),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.check,
+                          color: Colors.white, size: 14),
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                  const Spacer(),
-                  Row(
-                    children: [
-                      const Icon(Icons.star, color: Colors.amber, size: 14),
-                      const SizedBox(width: 4),
-                      Text(
-                        course['rating'].toString(),
-                        style: const TextStyle(
-                            color: Colors.white70,
+              ],
+            ),
+            const SizedBox(width: 15),
+            // Course Details
+            Expanded(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      course['category'],
+                      style: const TextStyle(
+                        color: Color(0xFF4A90E2),
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      course['title'],
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const Spacer(),
+                    Row(
+                      children: [
+                        const Icon(Icons.star, color: Colors.amber, size: 14),
+                        const SizedBox(width: 4),
+                        Text(
+                          course['rating'].toString(),
+                          style: const TextStyle(
+                              color: Colors.white70,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(width: 10),
+                        const Text("|",
+                            style: TextStyle(color: Colors.white24)),
+                        const SizedBox(width: 10),
+                        Text(
+                          course['duration'],
+                          style: const TextStyle(
+                              color: Colors.white70, fontSize: 11),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    // Progress Bar or View Certificate
+                    if (isOngoing)
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: LinearProgressIndicator(
+                                value: course['progress'] / course['total'],
+                                backgroundColor:
+                                    Colors.white.withValues(alpha: 0.1),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    course['color']),
+                                minHeight: 6,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 15),
+                          Text(
+                            "${course['progress']}/${course['total']}",
+                            style: const TextStyle(
+                              color: Colors.white70,
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      )
+                    else
+                      GestureDetector(
+                        onTap: () {
+                          PersistentNavBarNavigator.pushNewScreen(
+                            context,
+                            screen: CertificateScreen(course: course),
+                            withNavBar: false,
+                            pageTransitionAnimation:
+                                PageTransitionAnimation.cupertino,
+                          );
+                        },
+                        child: const Text(
+                          "VIEW CERTIFICATE",
+                          style: TextStyle(
+                            color: Color(0xFF4A90E2),
                             fontSize: 12,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(width: 10),
-                      const Text("|", style: TextStyle(color: Colors.white24)),
-                      const SizedBox(width: 10),
-                      Text(
-                        course['duration'],
-                        style: const TextStyle(
-                            color: Colors.white70, fontSize: 11),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  // Progress Bar Row
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: LinearProgressIndicator(
-                            value: progressPercent,
-                            backgroundColor:
-                                Colors.white.withValues(alpha: 0.1),
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(course['color']),
-                            minHeight: 6,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
                           ),
                         ),
                       ),
-                      const SizedBox(width: 15),
-                      Text(
-                        "${course['progress']}/${course['total']}",
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

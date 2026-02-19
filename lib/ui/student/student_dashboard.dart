@@ -130,31 +130,32 @@ class _StudentDashboardState extends State<StudentDashboard> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onPopInvoked: (didPop) async {
+    return PopScope(
+      canPop: _selectedIndex == 0,
+      onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
         if (_selectedIndex != 0) {
           _controller.jumpToTab(0);
         }
       },
       child: Scaffold(
-        appBar: _selectedIndex == 0
-            ? null
-            : CustomAppBar(
-                title: _getPageTitle(_selectedIndex),
-                actions: [
-                  IconButton(
-                    icon: const FaIcon(
-                      FontAwesomeIcons.bell,
-                      size: 18,
-                      color: AppColors.textPrimaryLight,
-                    ),
-                    onPressed: () {
-                      // TODO: Navigate to notifications
-                    },
-                  ),
-                ],
-              ),
+        // appBar: _selectedIndex == 0
+        //     ? null
+        //     : CustomAppBar(
+        //         title: _getPageTitle(_selectedIndex),
+        //         actions: [
+        //           IconButton(
+        //             icon: const FaIcon(
+        //               FontAwesomeIcons.bell,
+        //               size: 18,
+        //               color: AppColors.textPrimaryLight,
+        //             ),
+        //             onPressed: () {
+        //               // TODO: Navigate to notifications
+        //             },
+        //           ),
+        //         ],
+        //       ),
         body: PersistentTabView(
           context,
           controller: _controller,

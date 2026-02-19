@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:chewie/chewie.dart';
 import 'package:video_player/video_player.dart';
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_text_styles.dart';
-import '../../data/models/course_model.dart';
-import '../widgets/animated_button.dart';
-import '../widgets/glassmorphic_card.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
-  final CourseModel course;
+  final String title;
+  final String videoUrl;
 
   const VideoPlayerScreen({
     super.key,
-    required this.course,
+    required this.title,
+    this.videoUrl =
+        'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
   });
 
   @override
@@ -21,368 +17,232 @@ class VideoPlayerScreen extends StatefulWidget {
 }
 
 class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
-  late VideoPlayerController _videoPlayerController;
-  ChewieController? _chewieController;
-  bool _isLoading = true;
-  bool _showNotes = false;
-  double _playbackSpeed = 1.0;
-  final TextEditingController _notesController = TextEditingController();
-
-  final List<double> _speeds = [0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
-  final List<String> _qualities = ['360p', '480p', '720p', '1080p'];
-  String _selectedQuality = '720p';
+  late VideoPlayerController _controller;
+  bool _showControls = true;
+  bool _hasError = false;
 
   @override
   void initState() {
     super.initState();
-    _initializePlayer();
+    _initializeController();
   }
 
-  Future<void> _initializePlayer() async {
-    // TODO: Replace with actual video URL
-    _videoPlayerController = VideoPlayerController.networkUrl(
-      Uri.parse('https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4'),
-    );
+  void _initializeController() {
+    _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
+      ..initialize().then((_) {
+        setState(() {
+          _hasError = false;
+        });
+        _controller.play();
+      }).catchError((error) {
+        setState(() {
+          _hasError = true;
+        });
+      });
 
-    await _videoPlayerController.initialize();
-
-    _chewieController = ChewieController(
-      videoPlayerController: _videoPlayerController,
-      autoPlay: true,
-      looping: false,
-      aspectRatio: 16 / 9,
-      allowFullScreen: true,
-      allowMuting: true,
-      showControls: true,
-      materialProgressColors: ChewieProgressColors(
-        playedColor: AppColors.primary,
-        handleColor: AppColors.primary,
-        backgroundColor: Colors.grey,
-        bufferedColor: AppColors.primaryLight,
-      ),
-      placeholder: Container(
-        color: Colors.black,
-        child: const Center(
-          child: CircularProgressIndicator(),
-        ),
-      ),
-      autoInitialize: true,
-    );
-
-    setState(() => _isLoading = false);
+    _controller.addListener(() {
+      if (mounted) setState(() {});
+    });
   }
 
   @override
   void dispose() {
-    _videoPlayerController.dispose();
-    _chewieController?.dispose();
-    _notesController.dispose();
+    _controller.dispose();
     super.dispose();
+  }
+
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String minutes = twoDigits(duration.inMinutes.remainder(60));
+    String seconds = twoDigits(duration.inSeconds.remainder(60));
+    return "${twoDigits(duration.inHours)}:$minutes:$seconds";
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Video Player
-            _isLoading
-                ? const AspectRatio(
-                    aspectRatio: 16 / 9,
-                    child: Center(child: CircularProgressIndicator()),
-                  )
-                : AspectRatio(
-                    aspectRatio: 16 / 9,
-                    child: Chewie(controller: _chewieController!),
-                  ),
-
-            // Controls and Content
-            Expanded(
-              child: Container(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                child: Column(
-                  children: [
-                    // Video Info Header
-                    _buildVideoInfo(),
-
-                    // Action Buttons
-                    _buildActionButtons(),
-
-                    // Tabs or Notes Panel
-                    Expanded(
-                      child: _showNotes
-                          ? _buildNotesPanel()
-                          : _buildVideoDetails(),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildVideoInfo() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: Stack(
         children: [
-          Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () => Navigator.pop(context),
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.course.title,
-                      style: AppTextStyles.h6,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      widget.course.teacherName,
-                      style: AppTextStyles.bodySmall.copyWith(
-                        color: AppColors.textSecondaryLight,
+          // Video Player
+          Center(
+            child: _hasError
+                ? const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.error_outline,
+                          color: Colors.white54, size: 50),
+                      SizedBox(height: 10),
+                      Text("Failed to load video",
+                          style: TextStyle(color: Colors.white54)),
+                    ],
+                  )
+                : _controller.value.isInitialized
+                    ? AspectRatio(
+                        aspectRatio: _controller.value.aspectRatio,
+                        child: VideoPlayer(_controller),
+                      )
+                    : const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(color: Color(0xFF1ABC9C)),
+                          SizedBox(height: 20),
+                          Text("Loading Video...",
+                              style: TextStyle(color: Colors.white54)),
+                        ],
+                      ),
+          ),
+
+          // Tap Overlay for Controls
+          GestureDetector(
+            onTap: () => setState(() => _showControls = !_showControls),
+          ),
+
+          // Custom Controls Overlay
+          if (_showControls) ...[
+            // Left Control Bar (Vertical)
+            Positioned(
+              left: 25,
+              top: 100,
+              bottom: 100,
+              child: Column(
+                children: [
+                  RotatedBox(
+                    quarterTurns: 3, // Rotate correctly for vertical read
+                    child: Text(
+                      _formatDuration(_controller.value.position),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Inter',
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildActionButtons() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
-        children: [
-          _buildActionChip(
-            Icons.speed,
-            '${_playbackSpeed}x',
-            () => _showSpeedSelector(),
-          ),
-          const SizedBox(width: 8),
-          _buildActionChip(
-            Icons.hd,
-            _selectedQuality,
-            () => _showQualitySelector(),
-          ),
-          const SizedBox(width: 8),
-          _buildActionChip(
-            Icons.note_add_outlined,
-            'Notes',
-            () => setState(() => _showNotes = !_showNotes),
-          ),
-          const Spacer(),
-          FloatingActionButton(
-            mini: true,
-            backgroundColor: AppColors.error,
-            onPressed: () {
-              // Open doubt chat
-            },
-            child: const Icon(Icons.chat_bubble_outline, size: 20),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildActionChip(IconData icon, String label, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: AppColors.primary.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: AppColors.primary.withOpacity(0.3)),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 16, color: AppColors.primary),
-            const SizedBox(width: 4),
-            Text(
-              label,
-              style: AppTextStyles.caption.copyWith(
-                color: AppColors.primary,
-                fontWeight: FontWeight.w600,
+                  ),
+                  const SizedBox(height: 25),
+                  GestureDetector(
+                    onTap: () {
+                      _controller.value.isPlaying
+                          ? _controller.pause()
+                          : _controller.play();
+                    },
+                    child: Icon(
+                      _controller.value.isPlaying
+                          ? Icons.pause_rounded
+                          : Icons.play_arrow_rounded,
+                      color: Colors.white,
+                      size: 32,
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  Expanded(
+                    child: Container(
+                      width: 6,
+                      decoration: BoxDecoration(
+                        color: Colors.white10,
+                        borderRadius: BorderRadius.circular(3),
+                      ),
+                      child: Stack(
+                        alignment: Alignment.bottomCenter,
+                        children: [
+                          FractionallySizedBox(
+                            heightFactor: _controller.value.isInitialized
+                                ? (_controller.value.position.inMilliseconds /
+                                        _controller
+                                            .value.duration.inMilliseconds)
+                                    .clamp(0.0, 1.0)
+                                : 0,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    Color(0xFF1ABC9C),
+                                    Color(0xFF16A085)
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(3),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(0xFF1ABC9C)
+                                        .withValues(alpha: 0.3),
+                                    blurRadius: 10,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  const Icon(Icons.fullscreen_exit_rounded,
+                      color: Colors.white, size: 30),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
 
-  Widget _buildVideoDetails() {
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        Text('About this video', style: AppTextStyles.h6),
-        const SizedBox(height: 12),
-        GlassmorphicCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildInfoRow(Icons.subject, 'Subject', widget.course.subject),
-              const Divider(),
-              _buildInfoRow(Icons.access_time, 'Duration', '${widget.course.durationMinutes} min'),
-              const Divider(),
-              _buildInfoRow(Icons.remove_red_eye, 'Views', '${widget.course.viewCount}'),
-              const Divider(),
-              _buildInfoRow(Icons.star, 'Rating', '${widget.course.rating}/5'),
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
-        
-        Text('Description', style: AppTextStyles.h6),
-        const SizedBox(height: 12),
-        Text(
-          widget.course.description,
-          style: AppTextStyles.bodyMedium,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildNotesPanel() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text('My Notes', style: AppTextStyles.h6),
-              const Spacer(),
-              IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () => setState(() => _showNotes = false),
+            // Right Header Bar (Vertical)
+            Positioned(
+              right: 25,
+              top: 60,
+              bottom: 100,
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: const BoxDecoration(
+                        color: Colors.white10,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.close_rounded,
+                          color: Colors.white, size: 24),
+                    ),
+                  ),
+                  const SizedBox(height: 60),
+                  Expanded(
+                    child: RotatedBox(
+                      quarterTurns: 3, // Rotate correctly for vertical read
+                      child: Text(
+                        widget.title,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.0,
+                          fontFamily: 'Inter',
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Expanded(
-            child: TextField(
-              controller: _notesController,
-              maxLines: null,
-              expands: true,
-              decoration: InputDecoration(
-                hintText: 'Take notes while watching...',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+            ),
+
+            // Bottom Timestamp (Total)
+            Positioned(
+              bottom: 50,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Text(
+                  _formatDuration(_controller.value.duration),
+                  style: const TextStyle(
+                    color: Colors.white54,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: 16),
-          AnimatedButton(
-            text: 'Save Notes',
-            onPressed: () {
-              // Save notes
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Notes saved!')),
-              );
-            },
-            fullWidth: true,
-            icon: Icons.save,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoRow(IconData icon, String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        children: [
-          Icon(icon, size: 20, color: AppColors.textSecondaryLight),
-          const SizedBox(width: 12),
-          Text(
-            label,
-            style: AppTextStyles.labelMedium.copyWith(
-              color: AppColors.textSecondaryLight,
-            ),
-          ),
-          const Spacer(),
-          Text(value, style: AppTextStyles.labelMedium),
-        ],
-      ),
-    );
-  }
-
-  void _showSpeedSelector() {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('Playback Speed', style: AppTextStyles.h6),
-            const SizedBox(height: 16),
-            ..._speeds.map((speed) {
-              return ListTile(
-                title: Text('${speed}x'),
-                trailing: _playbackSpeed == speed
-                    ? const Icon(Icons.check, color: AppColors.primary)
-                    : null,
-                onTap: () {
-                  setState(() => _playbackSpeed = speed);
-                  _videoPlayerController.setPlaybackSpeed(speed);
-                  Navigator.pop(context);
-                },
-              );
-            }).toList(),
           ],
-        ),
-      ),
-    );
-  }
-
-  void _showQualitySelector() {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('Video Quality', style: AppTextStyles.h6),
-            const SizedBox(height: 16),
-            ..._qualities.map((quality) {
-              return ListTile(
-                title: Text(quality),
-                trailing: _selectedQuality == quality
-                    ? const Icon(Icons.check, color: AppColors.primary)
-                    : null,
-                onTap: () {
-                  setState(() => _selectedQuality = quality);
-                  // TODO: Change video quality
-                  Navigator.pop(context);
-                },
-              );
-            }).toList(),
-          ],
-        ),
+        ],
       ),
     );
   }

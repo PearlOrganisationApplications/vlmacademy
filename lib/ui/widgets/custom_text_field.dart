@@ -48,16 +48,8 @@ class CustomTextField extends StatelessWidget {
     final iconColor =
         darkMode ? AppColors.textSecondaryDark : AppColors.textSecondaryLight;
 
-    final enabledBorder = darkMode
-        ? UnderlineInputBorder(
-            borderSide: BorderSide(color: AppColors.borderDark, width: 1.0))
-        : const UnderlineInputBorder(
-            borderSide: BorderSide(color: AppColors.borderLight, width: 1.0));
-    final focusedBorder = darkMode
-        ? UnderlineInputBorder(
-            borderSide: BorderSide(color: AppColors.primary, width: 1.5))
-        : const UnderlineInputBorder(
-            borderSide: BorderSide(color: AppColors.primary, width: 1.5));
+    const enabledBorder = InputBorder.none;
+    const focusedBorder = InputBorder.none;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
