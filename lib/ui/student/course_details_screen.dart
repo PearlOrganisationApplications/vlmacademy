@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import '../../data/models/course_model.dart';
 import '../../core/theme/app_colors.dart';
+import 'payment_methods_screen.dart';
 
 class CourseDetailsScreen extends StatefulWidget {
   final CourseModel course;
@@ -26,8 +28,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildHeader(),
-                _buildDetailsCard(),
-                _buildTabContent(),
+                _buildUnifiedDetailsCard(),
                 const SizedBox(height: 100), // Spacing for bottom button
               ],
             ),
@@ -39,7 +40,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
             left: 20,
             right: 20,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GestureDetector(
                   onTap: () => Navigator.pop(context),
@@ -53,20 +53,33 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                         color: Colors.white, size: 20),
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.black26,
-                    borderRadius: BorderRadius.circular(12),
+                if (!_isAboutTab) ...[
+                  const SizedBox(width: 15),
+                  const Text(
+                    "Curriculcum",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  child: Icon(
-                    widget.course.isSaved
-                        ? Icons.bookmark
-                        : Icons.bookmark_border,
-                    color: Colors.white,
-                    size: 20,
+                ],
+                const Spacer(),
+                if (_isAboutTab)
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.black26,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      widget.course.isSaved
+                          ? Icons.bookmark
+                          : Icons.bookmark_border,
+                      color: Colors.white,
+                      size: 20,
+                    ),
                   ),
-                ),
               ],
             ),
           ),
@@ -153,11 +166,11 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
     );
   }
 
-  Widget _buildDetailsCard() {
+  Widget _buildUnifiedDetailsCard() {
     return Transform.translate(
       offset: const Offset(0, -60),
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20),
+        margin: const EdgeInsets.symmetric(horizontal: 8),
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: const Color(0xFF1B2A41),
@@ -173,6 +186,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Course Info Header
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -222,10 +236,228 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
               ],
             ),
             const SizedBox(height: 25),
+
+            // Tabs
             _buildTabs(),
+            const SizedBox(height: 25),
+
+            // Tab Content (Now internal to the card)
+            _isAboutTab ? _buildAboutContent() : _buildCurriculumContent(),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildAboutContent() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed accumsan ex ac urna commodo rutrum. Vestibulum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed accumsan ex ac urna commodo rutrum. Vestibulum",
+          style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.7),
+              fontSize: 13,
+              height: 1.5),
+        ),
+        const SizedBox(height: 25),
+        const Text(
+          "Instructor",
+          style: TextStyle(
+              color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 15),
+        _buildInstructorProfile(),
+        const SizedBox(height: 30),
+        const Text(
+          "What You'll Get",
+          style: TextStyle(
+              color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 15),
+        _buildWhatYouGetList(),
+        const SizedBox(height: 30),
+        _buildReviewsSection(),
+      ],
+    );
+  }
+
+  Widget _buildCurriculumContent() {
+    final curriculumData = [
+      {
+        "section": "Section 01 - Introduction",
+        "duration": "25 Mins",
+        "lessons": [
+          {
+            "id": "01",
+            "title": "Why Using Graphic De..",
+            "duration": "15 Mins",
+            "isLocked": false
+          },
+          {
+            "id": "02",
+            "title": "Setup Your Graphic De..",
+            "duration": "10 Mins",
+            "isLocked": false
+          },
+        ]
+      },
+      {
+        "section": "Section 02 - Graphic Design",
+        "duration": "55 Mins",
+        "lessons": [
+          {
+            "id": "03",
+            "title": "Take a Look Graphic De..",
+            "duration": "08 Mins",
+            "isLocked": true
+          },
+          {
+            "id": "04",
+            "title": "Working with Graphic De..",
+            "duration": "25 Mins",
+            "isLocked": true
+          },
+          {
+            "id": "05",
+            "title": "Working with Frame & Lay..",
+            "duration": "12 Mins",
+            "isLocked": true
+          },
+          {
+            "id": "06",
+            "title": "Using Graphic Plugins",
+            "duration": "10 Mins",
+            "isLocked": true
+          },
+        ]
+      },
+      {
+        "section": "Section 03 - Let's Practice",
+        "duration": "35 Mins",
+        "lessons": [
+          {
+            "id": "07",
+            "title": "Let's Design a Sign Up Fo..",
+            "duration": "15 Mins",
+            "isLocked": true
+          },
+          {
+            "id": "08",
+            "title": "Sharing work with Team",
+            "duration": "20 Mins",
+            "isLocked": true
+          },
+        ]
+      },
+    ];
+
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.zero,
+      itemCount: curriculumData.length,
+      separatorBuilder: (context, index) => const SizedBox(height: 25),
+      itemBuilder: (context, sectionIndex) {
+        final section = curriculumData[sectionIndex];
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildCurriculumSectionHeader(
+                section['section'] as String, section['duration'] as String),
+            const SizedBox(height: 15),
+            ...(section['lessons'] as List).map((lesson) {
+              return _buildLessonItem(
+                lesson['id'] as String,
+                lesson['title'] as String,
+                lesson['duration'] as String,
+                lesson['isLocked'] as bool,
+              );
+            }),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildCurriculumSectionHeader(String title, String duration) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+              color: Colors.blueAccent,
+              fontSize: 14,
+              fontWeight: FontWeight.bold),
+        ),
+        Text(
+          duration,
+          style: const TextStyle(color: Colors.blueAccent, fontSize: 12),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLessonItem(
+      String id, String title, String duration, bool isLocked) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Row(
+            children: [
+              // ID Circle
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Text(
+                    id,
+                    style: const TextStyle(
+                        color: Colors.blueAccent,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 15),
+              // Title and Duration
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      duration,
+                      style:
+                          const TextStyle(color: Colors.white54, fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+              // Icon
+              Icon(
+                isLocked ? Icons.lock_outline : Icons.play_circle_fill,
+                color: Colors.blueAccent,
+                size: 24,
+              ),
+            ],
+          ),
+        ),
+        const Divider(color: Colors.white12, height: 1),
+      ],
     );
   }
 
@@ -276,7 +508,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
               ),
               child: Center(
                 child: Text(
-                  "Curriculum",
+                  "Curriculcum",
                   style: TextStyle(
                     color: !_isAboutTab ? Colors.white : Colors.white54,
                     fontWeight: FontWeight.bold,
@@ -287,49 +519,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildTabContent() {
-    return Transform.translate(
-      offset: const Offset(0, -40),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed accumsan ex ac urna commodo rutrum. Vestibulum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed accumsan ex ac urna commodo rutrum. Vestibulum",
-              style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.7),
-                  fontSize: 13,
-                  height: 1.5),
-            ),
-            const SizedBox(height: 25),
-            const Text(
-              "Instructor",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 15),
-            _buildInstructorProfile(),
-            const SizedBox(height: 30),
-            const Text(
-              "What You'll Get",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 15),
-            _buildWhatYouGetList(),
-            const SizedBox(height: 30),
-            _buildReviewsSection(),
-          ],
-        ),
-      ),
     );
   }
 
@@ -494,40 +683,52 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
   }
 
   Widget _buildEnrollButton() {
-    return Container(
-      height: 60,
-      decoration: BoxDecoration(
-        gradient: AppColors.primaryGradient,
-        borderRadius: BorderRadius.circular(30),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.blue.withValues(alpha: 0.3),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Spacer(flex: 2),
-          Text(
-            "Enroll Course - ${widget.course.price ?? 499}/-",
-            style: const TextStyle(
-                color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const Spacer(),
-          Container(
-            margin: const EdgeInsets.only(right: 10),
-            padding: const EdgeInsets.all(8),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
+    return GestureDetector(
+      onTap: () {
+        PersistentNavBarNavigator.pushNewScreen(
+          context,
+          screen: PaymentMethodsScreen(course: widget.course),
+          withNavBar: false,
+          pageTransitionAnimation: PageTransitionAnimation.cupertino,
+        );
+      },
+      child: Container(
+        height: 60,
+        decoration: BoxDecoration(
+          gradient: AppColors.primaryGradient,
+          borderRadius: BorderRadius.circular(30),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.blue.withValues(alpha: 0.3),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
             ),
-            child: const Icon(Icons.arrow_forward,
-                color: Colors.blueAccent, size: 20),
-          ),
-        ],
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Spacer(flex: 2),
+            Text(
+              "Enroll Course - ${widget.course.price ?? 499}/-",
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
+            ),
+            const Spacer(),
+            Container(
+              margin: const EdgeInsets.only(right: 10),
+              padding: const EdgeInsets.all(8),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.arrow_forward,
+                  color: Colors.blueAccent, size: 20),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -5,7 +5,7 @@ import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import '../../core/theme/app_colors.dart';
 import '../widgets/custom_app_bar.dart';
 import 'home_screen.dart';
-import 'learning_screen.dart';
+import 'my_courses_screen.dart';
 import 'tests_screen.dart';
 import 'wallet_screen.dart';
 import 'profile_screen.dart';
@@ -31,7 +31,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
 
     _screens = const [
       HomeScreen(),
-      LearningScreen(),
+      MyCoursesScreen(),
       TestsScreen(),
       WalletScreen(),
       ProfileScreen(),
@@ -111,7 +111,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.35),
+            color: AppColors.primary.withValues(alpha: 0.35),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -131,12 +131,11 @@ class _StudentDashboardState extends State<StudentDashboard> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
         if (_selectedIndex != 0) {
           _controller.jumpToTab(0);
-          return false;
         }
-        return true;
       },
       child: Scaffold(
         appBar: _selectedIndex == 0
