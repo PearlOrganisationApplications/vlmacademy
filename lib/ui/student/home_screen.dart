@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
+import 'package:vlm_academy/ui/shared/notifications_screen.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import 'course_list_screen/popular_course_list.dart';
@@ -20,7 +21,7 @@ class HomeScreen extends StatelessWidget {
             children: [
               _buildTopStatusRow(),
               const SizedBox(height: 20),
-              _buildHeader(),
+              _buildHeader(context),
               const SizedBox(height: 20),
               _buildSearchBar(),
               const SizedBox(height: 25),
@@ -104,7 +105,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
     return Row(
       children: [
         Stack(
@@ -196,19 +197,27 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 15),
-        Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: AppColors.surfaceDark,
-            shape: BoxShape.circle,
-            border:
-                Border.all(color: AppColors.borderDark.withValues(alpha: 0.5)),
-          ),
-          child: const Badge(
-            child: FaIcon(
-              FontAwesomeIcons.solidBell,
-              color: AppColors.primary,
-              size: 20,
+        InkWell(
+          onTap: () {
+            Navigator.of(context, rootNavigator: true).push(
+              MaterialPageRoute(
+                  builder: (context) => const NotificationsScreen()),
+            );
+          },
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceDark,
+              shape: BoxShape.circle,
+              border: Border.all(
+                  color: AppColors.borderDark.withValues(alpha: 0.5)),
+            ),
+            child: const Badge(
+              child: FaIcon(
+                FontAwesomeIcons.solidBell,
+                color: AppColors.primary,
+                size: 20,
+              ),
             ),
           ),
         ),

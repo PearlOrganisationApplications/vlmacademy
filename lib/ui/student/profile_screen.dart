@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/sources/mock_data_source.dart';
 import 'edit_profile_screen.dart';
+import '../shared/notifications_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -90,7 +91,13 @@ class ProfileScreen extends StatelessWidget {
                               onTap: () {}),
                           _buildMenuItem(
                               Icons.notifications_none, 'Notifications',
-                              onTap: () {}),
+                              onTap: () {
+                            Navigator.of(context, rootNavigator: true).push(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const NotificationsScreen()),
+                            );
+                          }),
                           _buildMenuItem(Icons.security_outlined, 'Security',
                               onTap: () {}),
                           _buildMenuItem(

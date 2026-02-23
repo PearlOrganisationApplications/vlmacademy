@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/utils/formatters.dart';
+import '../student/notifications_settings_screen.dart';
 import '../widgets/glassmorphic_card.dart';
 import '../widgets/animated_button.dart';
 
@@ -58,20 +59,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     ),
   ];
 
-  void _markAllAsRead() {
-    setState(() {
-      for (var notification in _notifications) {
-        notification.isRead = true;
-      }
-    });
-  }
-
-  void _clearAll() {
-    setState(() {
-      _notifications.clear();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final unreadCount = _notifications.where((n) => !n.isRead).length;
@@ -81,26 +68,16 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         title: const Text('Notifications'),
         centerTitle: true,
         actions: [
-          if (_notifications.isNotEmpty)
-            PopupMenuButton<String>(
-              onSelected: (value) {
-                if (value == 'mark_read') {
-                  _markAllAsRead();
-                } else if (value == 'clear') {
-                  _clearAll();
-                }
-              },
-              itemBuilder: (context) => [
-                const PopupMenuItem(
-                  value: 'mark_read',
-                  child: Text('Mark all as read'),
-                ),
-                const PopupMenuItem(
-                  value: 'clear',
-                  child: Text('Clear all'),
-                ),
-              ],
-            ),
+          IconButton(
+            icon: const Icon(Icons.settings_outlined, color: Colors.white70),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const NotificationsSettingsScreen()),
+              );
+            },
+          ),
         ],
       ),
       body: _notifications.isEmpty
@@ -133,21 +110,19 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           : Column(
               children: [
                 if (unreadCount > 0)
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    color: AppColors.primary.withOpacity(0.1),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 12),
                     child: Row(
                       children: [
-                        Icon(
-                          Icons.circle,
-                          size: 12,
-                          color: AppColors.primary,
-                        ),
+                        const Icon(Icons.circle,
+                            size: 8, color: AppColors.primary),
                         const SizedBox(width: 8),
                         Text(
-                          '$unreadCount unread notification${unreadCount > 1 ? 's' : ''}',
+                          '$unreadCount unread notifications',
                           style: AppTextStyles.labelMedium.copyWith(
                             color: AppColors.primary,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ],
@@ -195,7 +170,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               ),
             ),
             const SizedBox(width: 12),
-            
+
             // Content
             Expanded(
               child: Column(
