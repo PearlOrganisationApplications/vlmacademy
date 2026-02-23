@@ -4,6 +4,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 
 enum AnimatedButtonType { primary, secondary, outline, text, gradient }
+
 enum AnimatedButtonSize { small, medium, large }
 
 class AnimatedButton extends StatefulWidget {
@@ -105,7 +106,13 @@ class _AnimatedButtonState extends State<AnimatedButton>
                 Icon(widget.icon, size: 20),
                 const SizedBox(width: 8),
               ],
-              Text(widget.text, style: textStyle),
+              Flexible(
+                child: Text(
+                  widget.text,
+                  style: textStyle,
+                  textAlign: TextAlign.center,
+                ),
+              ),
               if (widget.suffixIcon != null) ...[
                 const SizedBox(width: 8),
                 Icon(widget.suffixIcon, size: 20),

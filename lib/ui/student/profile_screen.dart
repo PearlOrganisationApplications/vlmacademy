@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../data/sources/mock_data_source.dart';
 import 'edit_profile_screen.dart';
 import '../shared/notifications_screen.dart';
+import 'rewards_center_screen.dart';
+import 'wallet_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -86,9 +88,14 @@ class ProfileScreen extends StatelessWidget {
                                       const EditProfileScreen()),
                             );
                           }),
-                          _buildMenuItem(Icons.account_balance_wallet_outlined,
-                              'Payment Option',
-                              onTap: () {}),
+                          _buildMenuItem(
+                              Icons.account_balance_wallet_outlined, 'Wallet',
+                              onTap: () {
+                            Navigator.of(context, rootNavigator: true).push(
+                              MaterialPageRoute(
+                                  builder: (context) => const WalletScreen()),
+                            );
+                          }),
                           _buildMenuItem(
                               Icons.notifications_none, 'Notifications',
                               onTap: () {
@@ -96,6 +103,15 @@ class ProfileScreen extends StatelessWidget {
                               MaterialPageRoute(
                                   builder: (context) =>
                                       const NotificationsScreen()),
+                            );
+                          }),
+                          _buildMenuItem(
+                              Icons.card_giftcard_outlined, 'Rewards',
+                              onTap: () {
+                            Navigator.of(context, rootNavigator: true).push(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const RewardsCenterScreen()),
                             );
                           }),
                           _buildMenuItem(Icons.security_outlined, 'Security',

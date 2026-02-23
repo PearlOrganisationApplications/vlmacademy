@@ -3,6 +3,9 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../widgets/glassmorphic_card.dart';
 import '../widgets/animated_button.dart';
+import 'daily_mcq_screen.dart';
+import 'spin_win_screen.dart';
+import 'refer_earn_screen.dart';
 
 class RewardsCenterScreen extends StatefulWidget {
   const RewardsCenterScreen({super.key});
@@ -37,6 +40,9 @@ class _RewardsCenterScreenState extends State<RewardsCenterScreen>
         centerTitle: true,
         bottom: TabBar(
           controller: _tabController,
+          indicatorColor: AppColors.primary,
+          labelColor: AppColors.primary,
+          unselectedLabelColor: Colors.white60,
           tabs: const [
             Tab(text: 'Daily Rewards'),
             Tab(text: 'Leaderboard'),
@@ -49,16 +55,6 @@ class _RewardsCenterScreenState extends State<RewardsCenterScreen>
           // Points Header
           Container(
             padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              gradient: AppColors.rewardGradient,
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.rewardGold.withOpacity(0.3),
-                  blurRadius: 20,
-                  offset: const Offset(0, 10),
-                ),
-              ],
-            ),
             child: Row(
               children: [
                 Expanded(
@@ -145,19 +141,16 @@ class _RewardsCenterScreenState extends State<RewardsCenterScreen>
                 children: List.generate(7, (index) {
                   final isCompleted = index < _currentStreak;
                   final isToday = index == today;
-                  
+
                   return Column(
                     children: [
                       Container(
                         width: 40,
                         height: 40,
                         decoration: BoxDecoration(
-                          gradient: isCompleted
-                              ? AppColors.rewardGradient
-                              : null,
-                          color: isCompleted
-                              ? null
-                              : AppColors.borderLight,
+                          // gradient:
+                          //     isCompleted ? AppColors.primaryGradient : null,
+                          color: isCompleted ? null : AppColors.borderLight,
                           shape: BoxShape.circle,
                           border: isToday
                               ? Border.all(
@@ -188,9 +181,8 @@ class _RewardsCenterScreenState extends State<RewardsCenterScreen>
                           color: isToday
                               ? AppColors.primary
                               : AppColors.textSecondaryLight,
-                          fontWeight: isToday
-                              ? FontWeight.bold
-                              : FontWeight.normal,
+                          fontWeight:
+                              isToday ? FontWeight.bold : FontWeight.normal,
                         ),
                       ),
                     ],
@@ -205,7 +197,7 @@ class _RewardsCenterScreenState extends State<RewardsCenterScreen>
                     // Claim reward
                   },
                   type: AnimatedButtonType.gradient,
-                  gradient: AppColors.rewardGradient,
+                  gradient: AppColors.primaryGradient,
                   fullWidth: true,
                   icon: Icons.card_giftcard,
                 ),
@@ -213,7 +205,6 @@ class _RewardsCenterScreenState extends State<RewardsCenterScreen>
           ),
         ),
         const SizedBox(height: 24),
-
         Text('Bonus Rewards', style: AppTextStyles.h5),
         const SizedBox(height: 12),
         _buildBonusCard(
@@ -241,8 +232,73 @@ class _RewardsCenterScreenState extends State<RewardsCenterScreen>
           0.33,
           Icons.people,
           AppColors.successGradient,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ReferEarnScreen()),
+            );
+          },
+        ),
+        const SizedBox(height: 24),
+        Text('Games & Challenges', style: AppTextStyles.h5),
+        const SizedBox(height: 12),
+        _buildGameCard(
+          'Daily MCQ',
+          'Test your knowledge',
+          Icons.quiz_outlined,
+          AppColors.primaryGradient,
+          () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const DailyMcqScreen()),
+            );
+          },
+        ),
+        const SizedBox(height: 12),
+        _buildGameCard(
+          'Spin & Win',
+          'Win exciting prizes',
+          Icons.auto_awesome,
+          AppColors.secondaryGradient,
+          () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SpinWinScreen()),
+            );
+          },
         ),
       ],
+    );
+  }
+
+  Widget _buildGameCard(
+    String title,
+    String subtitle,
+    IconData icon,
+    Gradient gradient,
+    VoidCallback onTap,
+  ) {
+    return GlassmorphicCard(
+      child: ListTile(
+        contentPadding: EdgeInsets.zero,
+        leading: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            gradient: gradient,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(icon, color: Colors.white, size: 24),
+        ),
+        title: Text(title, style: AppTextStyles.labelLarge),
+        subtitle: Text(
+          subtitle,
+          style: AppTextStyles.caption.copyWith(
+            color: AppColors.textSecondaryLight,
+          ),
+        ),
+        trailing: const Icon(Icons.chevron_right, color: Colors.white54),
+        onTap: onTap,
+      ),
     );
   }
 
@@ -252,61 +308,65 @@ class _RewardsCenterScreenState extends State<RewardsCenterScreen>
     String progress,
     double progressValue,
     IconData icon,
-    Gradient gradient,
-  ) {
-    return GlassmorphicCard(
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              gradient: gradient,
-              borderRadius: BorderRadius.circular(12),
+    Gradient gradient, {
+    VoidCallback? onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: GlassmorphicCard(
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                gradient: gradient,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: Colors.white, size: 28),
             ),
-            child: Icon(icon, color: Colors.white, size: 28),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: AppTextStyles.labelLarge),
-                const SizedBox(height: 4),
-                Text(
-                  progress,
-                  style: AppTextStyles.caption.copyWith(
-                    color: AppColors.textSecondaryLight,
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: AppTextStyles.labelLarge),
+                  const SizedBox(height: 4),
+                  Text(
+                    progress,
+                    style: AppTextStyles.caption.copyWith(
+                      color: AppColors.textSecondaryLight,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  child: LinearProgressIndicator(
-                    value: progressValue,
-                    backgroundColor: AppColors.borderLight,
-                    valueColor: AlwaysStoppedAnimation(AppColors.primary),
-                    minHeight: 6,
+                  const SizedBox(height: 8),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: LinearProgressIndicator(
+                      value: progressValue,
+                      backgroundColor: AppColors.borderLight,
+                      valueColor: AlwaysStoppedAnimation(AppColors.primary),
+                      minHeight: 6,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 12),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: AppColors.rewardGold.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              reward,
-              style: AppTextStyles.caption.copyWith(
-                color: AppColors.rewardGold,
-                fontWeight: FontWeight.bold,
+                ],
               ),
             ),
-          ),
-        ],
+            const SizedBox(width: 12),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                reward,
+                style: AppTextStyles.caption.copyWith(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -339,9 +399,7 @@ class _RewardsCenterScreenState extends State<RewardsCenterScreen>
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    gradient: rank <= 3
-                        ? AppColors.rewardGradient
-                        : null,
+                    gradient: rank <= 3 ? AppColors.primaryGradient : null,
                     color: rank <= 3 ? null : AppColors.borderLight,
                     shape: BoxShape.circle,
                   ),
@@ -377,9 +435,7 @@ class _RewardsCenterScreenState extends State<RewardsCenterScreen>
                           fontWeight: isCurrentUser
                               ? FontWeight.bold
                               : FontWeight.normal,
-                          color: isCurrentUser
-                              ? AppColors.primary
-                              : null,
+                          color: isCurrentUser ? AppColors.primary : null,
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -444,7 +500,7 @@ class _RewardsCenterScreenState extends State<RewardsCenterScreen>
         crossAxisCount: 2,
         mainAxisSpacing: 16,
         crossAxisSpacing: 16,
-        childAspectRatio: 1,
+        childAspectRatio: 0.75, // Increased height
       ),
       itemCount: achievements.length,
       itemBuilder: (context, index) {
@@ -452,44 +508,49 @@ class _RewardsCenterScreenState extends State<RewardsCenterScreen>
         final unlocked = achievement['unlocked'] as bool;
 
         return GlassmorphicCard(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: unlocked
-                      ? AppColors.rewardGradient
-                      : null,
-                  color: unlocked ? null : AppColors.borderLight,
-                  shape: BoxShape.circle,
+          child: Padding(
+            padding: const EdgeInsets.all(8), // Reduced padding
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12), // Reduced icon padding
+                  decoration: BoxDecoration(
+                    gradient: unlocked ? AppColors.primaryGradient : null,
+                    color: unlocked ? null : AppColors.borderLight,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    achievement['icon'] as IconData,
+                    size: 28, // Slightly smaller icon
+                    color:
+                        unlocked ? Colors.white : AppColors.textSecondaryLight,
+                  ),
                 ),
-                child: Icon(
-                  achievement['icon'] as IconData,
-                  size: 40,
-                  color: unlocked
-                      ? Colors.white
-                      : AppColors.textSecondaryLight,
+                const SizedBox(height: 8), // Reduced spacing
+                Text(
+                  achievement['title'] as String,
+                  style: AppTextStyles.labelMedium.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: unlocked ? null : AppColors.textSecondaryLight,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                achievement['title'] as String,
-                style: AppTextStyles.labelMedium.copyWith(
-                  color: unlocked ? null : AppColors.textSecondaryLight,
+                const SizedBox(height: 2), // Reduced spacing
+                Text(
+                  achievement['description'] as String,
+                  style: AppTextStyles.caption.copyWith(
+                    color: AppColors.textSecondaryLight,
+                    fontSize: 10, // Slightly smaller font
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                achievement['description'] as String,
-                style: AppTextStyles.caption.copyWith(
-                  color: AppColors.textSecondaryLight,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
