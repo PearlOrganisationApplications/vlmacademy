@@ -535,33 +535,29 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                       // Confetti/Dots simulation
                       ..._buildDecorations(),
                       // Stars
-                      Positioned(
+                      const Positioned(
                         top: 10,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            const Icon(Icons.star,
-                                color: Colors.amber, size: 35),
-                            const SizedBox(width: 8),
-                            const Icon(Icons.star,
-                                color: Colors.amber, size: 50),
-                            const SizedBox(width: 8),
-                            const Icon(Icons.star,
-                                color: Colors.amber, size: 35),
+                            Icon(Icons.star, color: Colors.amber, size: 35),
+                            SizedBox(width: 8),
+                            Icon(Icons.star, color: Colors.amber, size: 50),
+                            SizedBox(width: 8),
+                            Icon(Icons.star, color: Colors.amber, size: 35),
                           ],
                         ),
                       ),
                       // Shield Badge
-                      Positioned(
+                      const Positioned(
                         bottom: 0,
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
-                            const Icon(Icons.shield,
+                            Icon(Icons.shield,
                                 color: Color(0xFF2ECC71), size: 90),
-                            const Icon(Icons.check,
-                                color: Colors.white, size: 45),
+                            Icon(Icons.check, color: Colors.white, size: 45),
                           ],
                         ),
                       ),

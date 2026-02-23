@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_text_styles.dart';
 import '../../data/sources/mock_data_source.dart';
-import '../widgets/custom_card.dart';
+import 'edit_profile_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -10,152 +8,201 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = MockDataSource.mockUsers[0];
+    const backgroundColor = Color(0xFF030712); // Deep dark background
+    const cardBorderColor = Color(0xFF3B82F6); // Vibrant blue border
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () {
-              // Edit profile
-            },
-          ),
-        ],
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          // Profile Header
-          Center(
+      backgroundColor: backgroundColor,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               children: [
-                Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    gradient: AppColors.primaryGradient,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
-                    child: Text(
-                      user.name[0].toUpperCase(),
-                      style: const TextStyle(
+                const SizedBox(height: 10),
+                // Custom App Bar
+                Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back,
+                          color: Colors.white, size: 28),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    const Text(
+                      'Profile',
+                      style: TextStyle(
                         color: Colors.white,
-                        fontSize: 40,
+                        fontSize: 22,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
+                  ],
                 ),
-                const SizedBox(height: 16),
-                Text(user.name, style: AppTextStyles.h4),
-                const SizedBox(height: 4),
-                Text(
-                  user.email,
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.textSecondaryLight,
-                  ),
+                const SizedBox(height: 50),
+                // Overlapping Avatar and Card Stack
+                Stack(
+                  clipBehavior: Clip.none,
+                  alignment: Alignment.topCenter,
+                  children: [
+                    // The Card
+                    Container(
+                      margin: const EdgeInsets.only(top: 60),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF111827), // Dark navy for card
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(
+                            color: cardBorderColor.withOpacity(0.8), width: 2),
+                      ),
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                              height: 70), // Spacing for overlapping avatar
+                          // User Name & Email
+                          Text(
+                            user.name,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            user.email,
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.7),
+                              fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          // Menu Items
+                          _buildMenuItem(Icons.person_outline, 'Edit Profile',
+                              onTap: () {
+                            Navigator.of(context, rootNavigator: true).push(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const EditProfileScreen()),
+                            );
+                          }),
+                          _buildMenuItem(Icons.account_balance_wallet_outlined,
+                              'Payment Option',
+                              onTap: () {}),
+                          _buildMenuItem(
+                              Icons.notifications_none, 'Notifications',
+                              onTap: () {}),
+                          _buildMenuItem(Icons.security_outlined, 'Security',
+                              onTap: () {}),
+                          _buildMenuItem(
+                            Icons.translate,
+                            'Language',
+                            trailing: 'English (US)',
+                            onTap: () {},
+                          ),
+                          _buildMenuItem(Icons.visibility_outlined, 'Dark Mode',
+                              onTap: () {}),
+                          _buildMenuItem(
+                              Icons.description_outlined, 'Terms & Conditions',
+                              onTap: () {}),
+                          _buildMenuItem(Icons.help_outline, 'Help Center',
+                              onTap: () {}),
+                          _buildMenuItem(Icons.mail_outline, 'Invite Friends',
+                              onTap: () {}),
+                          _buildMenuItem(Icons.logout, 'Logout',
+                              showDivider: false, onTap: () {}),
+                          const SizedBox(height: 10),
+                        ],
+                      ),
+                    ),
+                    // The Overlapping Avatar
+                    Positioned(
+                      top: 0,
+                      child: Stack(
+                        alignment: Alignment.bottomRight,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border:
+                                  Border.all(color: cardBorderColor, width: 2),
+                            ),
+                            child: const CircleAvatar(
+                              radius: 56,
+                              backgroundImage: NetworkImage(
+                                'https://randomuser.me/api/portraits/men/1.jpg',
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: const BoxDecoration(
+                              color: Color(0xFF3B82F6),
+                              shape: BoxShape.circle,
+                            ),
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.of(context, rootNavigator: true).push(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const EditProfileScreen()),
+                                );
+                              },
+                              child: const Icon(
+                                Icons.edit_outlined,
+                                color: Colors.white,
+                                size: 16,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  user.phone ?? '',
-                  style: AppTextStyles.bodySmall.copyWith(
-                    color: AppColors.textSecondaryLight,
-                  ),
-                ),
+                const SizedBox(height: 30),
               ],
             ),
           ),
-          const SizedBox(height: 32),
-          
-          // Academic Info
-          Text('Academic Information', style: AppTextStyles.h6),
-          const SizedBox(height: 12),
-          CustomCard(
-            child: Column(
-              children: [
-                _buildInfoRow(Icons.school, 'Class', user.classLevel ?? 'N/A'),
-                const Divider(),
-                _buildInfoRow(Icons.book, 'Board', user.board ?? 'N/A'),
-                const Divider(),
-                _buildInfoRow(Icons.subject, 'Subjects', user.subjects?.join(', ') ?? 'N/A'),
-              ],
-            ),
-          ),
-          const SizedBox(height: 24),
-          
-          // Settings
-          Text('Settings', style: AppTextStyles.h6),
-          const SizedBox(height: 12),
-          CustomCard(
-            padding: const EdgeInsets.all(0),
-            child: Column(
-              children: [
-                _buildSettingItem(Icons.notifications_outlined, 'Notifications', () {}),
-                const Divider(height: 1),
-                _buildSettingItem(Icons.language, 'Language', () {}),
-                const Divider(height: 1),
-                _buildSettingItem(Icons.dark_mode_outlined, 'Dark Mode', () {}),
-                const Divider(height: 1),
-                _buildSettingItem(Icons.help_outline, 'Help & Support', () {}),
-                const Divider(height: 1),
-                _buildSettingItem(Icons.privacy_tip_outlined, 'Privacy Policy', () {}),
-              ],
-            ),
-          ),
-          const SizedBox(height: 24),
-          
-          // Logout Button
-          CustomCard(
-            child: ListTile(
-              leading: const Icon(Icons.logout, color: AppColors.error),
-              title: Text(
-                'Logout',
-                style: AppTextStyles.labelLarge.copyWith(color: AppColors.error),
-              ),
-              onTap: () {
-                // Logout
-              },
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget _buildInfoRow(IconData icon, String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      child: Row(
-        children: [
-          Icon(icon, color: AppColors.primary, size: 24),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: AppTextStyles.caption.copyWith(
-                    color: AppColors.textSecondaryLight,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(value, style: AppTextStyles.labelMedium),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSettingItem(IconData icon, String title, VoidCallback onTap) {
+  Widget _buildMenuItem(
+    IconData icon,
+    String title, {
+    String? trailing,
+    bool showDivider = true,
+    required VoidCallback onTap,
+  }) {
     return ListTile(
-      leading: Icon(icon, color: AppColors.textSecondaryLight),
-      title: Text(title, style: AppTextStyles.labelMedium),
-      trailing: const Icon(Icons.chevron_right, color: AppColors.textSecondaryLight),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 0),
+      leading: Icon(icon, color: Colors.white.withOpacity(0.8), size: 24),
+      title: Text(
+        title,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (trailing != null)
+            Text(
+              trailing,
+              style: const TextStyle(
+                color: Color(0xFF3B82F6),
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          const SizedBox(width: 8),
+          const Icon(Icons.chevron_right, color: Colors.white54),
+        ],
+      ),
       onTap: onTap,
     );
   }
