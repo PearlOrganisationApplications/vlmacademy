@@ -56,7 +56,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                 if (!_isAboutTab) ...[
                   const SizedBox(width: 15),
                   const Text(
-                    "Curriculcum",
+                    "Curriculum",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -508,7 +508,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
               ),
               child: Center(
                 child: Text(
-                  "Curriculcum",
+                  "Curriculum",
                   style: TextStyle(
                     color: !_isAboutTab ? Colors.white : Colors.white54,
                     fontWeight: FontWeight.bold,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
@@ -10,6 +11,14 @@ import 'providers/test_provider.dart';
 import 'providers/wallet_provider.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Lock to portrait mode to prevent orientation change crashes during startup
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
   runApp(const VlmAcademyApp());
 }
 
@@ -24,8 +33,8 @@ class VlmAcademyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: _designSize,
-      minTextAdapt: true,       // scales text down on small screens
-      splitScreenMode: true,    // handles split-screen / foldables
+      minTextAdapt: true, // scales text down on small screens
+      splitScreenMode: true, // handles split-screen / foldables
       builder: (context, child) {
         return MultiProvider(
           providers: [

@@ -281,10 +281,14 @@ class HomeScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                "Daily Rewards Section",
-                style: AppTextStyles.h4.copyWith(color: Colors.white),
+              Expanded(
+                child: Text(
+                  "Daily Rewards Section",
+                  style: AppTextStyles.h4.copyWith(color: Colors.white),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
+              const SizedBox(width: 10),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
@@ -525,7 +529,7 @@ class HomeScreen extends StatelessWidget {
                         color: Colors.grey, size: 10),
                     const SizedBox(width: 5),
                     Text(
-                      "$players Adventurers Playing",
+                      "$players ",
                       style:
                           const TextStyle(color: Colors.white70, fontSize: 12),
                     ),

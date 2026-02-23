@@ -36,7 +36,8 @@ class ShimmerLoading extends StatelessWidget {
 
     return Shimmer.fromColors(
       baseColor: isDark ? AppColors.surfaceDarkElevated : AppColors.shimmerBase,
-      highlightColor: isDark ? AppColors.borderDark : AppColors.shimmerHighlight,
+      highlightColor:
+          isDark ? AppColors.borderDark : AppColors.shimmerHighlight,
       child: Container(
         width: width,
         height: height,
@@ -61,15 +62,15 @@ class ShimmerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          const Row(
             children: [
               const ShimmerLoading.circular(width: 50, height: 50),
               const SizedBox(width: 12),
-              Expanded(
-                child: Column(
+              const Expanded(
+                child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: const [
                     ShimmerLoading.text(width: 150, height: 16),
@@ -99,12 +100,12 @@ class ShimmerListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
+      child: const Row(
         children: [
           const ShimmerLoading.circular(width: 60, height: 60),
           const SizedBox(width: 16),
-          Expanded(
-            child: Column(
+          const Expanded(
+            child: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: const [
                 ShimmerLoading.text(width: double.infinity, height: 16),
