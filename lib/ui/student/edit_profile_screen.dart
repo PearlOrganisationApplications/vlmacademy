@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../widgets/animated_button.dart';
-import '../../core/theme/app_colors.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});

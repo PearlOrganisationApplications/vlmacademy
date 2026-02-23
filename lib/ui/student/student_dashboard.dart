@@ -7,7 +7,7 @@ import '../widgets/custom_app_bar.dart';
 import 'home_screen.dart';
 import 'my_courses_screen.dart';
 import 'tests_screen.dart';
-import 'wallet_screen.dart';
+import 'transactions_screen.dart';
 import 'profile_screen.dart';
 
 class StudentDashboard extends StatefulWidget {
@@ -33,7 +33,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
       HomeScreen(),
       MyCoursesScreen(),
       TestsScreen(),
-      WalletScreen(),
+      TransactionsScreen(),
       ProfileScreen(),
     ];
 
