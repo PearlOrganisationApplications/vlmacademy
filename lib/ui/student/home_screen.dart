@@ -5,6 +5,8 @@ import 'package:vlm_academy/ui/shared/notifications_screen.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import 'course_list_screen/popular_course_list.dart';
+import 'chat/inbox_screen.dart';
+import 'daily_mcq_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -25,7 +27,7 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 20),
               _buildSearchBar(),
               const SizedBox(height: 25),
-              _buildDailyRewardsCard(),
+              _buildDailyRewardsCard(context),
               const SizedBox(height: 25),
               _buildSectionHeader("Popular Courses", onSeeAll: () {
                 PersistentNavBarNavigator.pushNewScreen(
@@ -52,27 +54,31 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildTopStatusRow() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        _buildStatusBadge(
-          icon: FontAwesomeIcons.bolt,
-          color: Colors.amber,
-          label: "Level 12",
-        ),
-        const SizedBox(width: 8),
-        _buildStatusBadge(
-          icon: FontAwesomeIcons.solidStar,
-          color: AppColors.primary,
-          label: "1,245 Coins",
-        ),
-        const SizedBox(width: 8),
-        _buildStatusBadge(
-          icon: FontAwesomeIcons.solidGem,
-          color: Colors.cyan,
-          label: "42 Gems",
-        ),
-      ],
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      physics: const BouncingScrollPhysics(),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          _buildStatusBadge(
+            icon: FontAwesomeIcons.bolt,
+            color: Colors.amber,
+            label: "Level 12",
+          ),
+          const SizedBox(width: 8),
+          _buildStatusBadge(
+            icon: FontAwesomeIcons.solidStar,
+            color: AppColors.primary,
+            label: "1,245 Coins",
+          ),
+          const SizedBox(width: 8),
+          _buildStatusBadge(
+            icon: FontAwesomeIcons.solidGem,
+            color: Colors.cyan,
+            label: "42 Gems",
+          ),
+        ],
+      ),
     );
   }
 
@@ -150,11 +156,11 @@ class HomeScreen extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const Text("🌟", style: TextStyle(fontSize: 18)),
-                  const SizedBox(width: 5),
                   Text(
                     "Welcome Back,",
-                    style: AppTextStyles.h4.copyWith(
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.labelSmall.copyWith(
                       color: AppColors.textPrimaryDark,
                       fontWeight: FontWeight.bold,
                     ),
@@ -162,8 +168,10 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
               Text(
-                "Explorer Harsha!",
-                style: AppTextStyles.h4.copyWith(
+                "Harsha!",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyles.labelSmall.copyWith(
                   color: AppColors.textPrimaryDark,
                   fontWeight: FontWeight.bold,
                 ),
@@ -197,6 +205,28 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 15),
+        InkWell(
+          onTap: () {
+            Navigator.of(context, rootNavigator: true).push(
+              MaterialPageRoute(builder: (context) => const InboxScreen()),
+            );
+          },
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceDark,
+              shape: BoxShape.circle,
+              border: Border.all(
+                  color: AppColors.borderDark.withValues(alpha: 0.5)),
+            ),
+            child: const FaIcon(
+              FontAwesomeIcons.solidCommentDots,
+              color: AppColors.primary,
+              size: 20,
+            ),
+          ),
+        ),
+        const SizedBox(width: 10),
         InkWell(
           onTap: () {
             Navigator.of(context, rootNavigator: true).push(
@@ -269,7 +299,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDailyRewardsCard() {
+  Widget _buildDailyRewardsCard(BuildContext context) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -325,7 +355,11 @@ class HomeScreen extends StatelessWidget {
           ),
           const SizedBox(height: 15),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context, rootNavigator: true).push(
+                MaterialPageRoute(builder: (context) => const DailyMcqScreen()),
+              );
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.amber,
               foregroundColor: Colors.black,

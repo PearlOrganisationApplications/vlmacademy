@@ -4,6 +4,8 @@ import 'edit_profile_screen.dart';
 import '../shared/notifications_screen.dart';
 import 'rewards_center_screen.dart';
 import 'wallet_screen.dart';
+import 'terms_conditions_screen.dart';
+import 'help_center_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -126,9 +128,21 @@ class ProfileScreen extends StatelessWidget {
                               onTap: () {}),
                           _buildMenuItem(
                               Icons.description_outlined, 'Terms & Conditions',
-                              onTap: () {}),
+                              onTap: () {
+                            Navigator.of(context, rootNavigator: true).push(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const TermsConditionsScreen()),
+                            );
+                          }),
                           _buildMenuItem(Icons.help_outline, 'Help Center',
-                              onTap: () {}),
+                              onTap: () {
+                            Navigator.of(context, rootNavigator: true).push(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const HelpCenterScreen()),
+                            );
+                          }),
                           _buildMenuItem(Icons.mail_outline, 'Invite Friends',
                               onTap: () {}),
                           _buildMenuItem(Icons.logout, 'Logout',
