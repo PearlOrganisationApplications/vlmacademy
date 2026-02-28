@@ -60,141 +60,153 @@ class _OtpScreenState extends State<OtpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            // Hidden TextField to capture system keyboard input
-            Opacity(
-              opacity: 0,
-              child: SizedBox(
-                height: 1,
-                width: 1,
-                child: TextField(
-                  controller: _otpController,
-                  focusNode: _focusNode,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  maxLength: _otpLength,
-                  onChanged: (value) {
-                    setState(() {});
-                    if (value.length == _otpLength) {
-                      _onVerify();
-                    }
-                  },
-                ),
-              ),
-            ),
-
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 20.h),
-                  // Header
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () => Navigator.pop(context),
-                        child: Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
-                          size: 26.sp,
-                        ),
-                      ),
-                      SizedBox(width: 24.w),
-                      Text(
-                        'Verification Code',
-                        style: AppTextStyles.h4.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const Spacer(flex: 1),
-
-                  // Subtitle
-                  Align(
-                    alignment: Alignment.center,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 32.w),
-                      child: Text(
-                        'Please check your email  to see the verification code',
-                        textAlign: TextAlign.center,
-                        style: AppTextStyles.bodyMedium.copyWith(
-                          color: AppColors.textSecondaryDark,
-                          height: 1.5,
-                        ),
-                      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/bgimage.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: SafeArea(
+          child: GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: Stack(
+              children: [
+                // Hidden TextField to capture system keyboard input
+                Opacity(
+                  opacity: 0,
+                  child: SizedBox(
+                    height: 1,
+                    width: 1,
+                    child: TextField(
+                      controller: _otpController,
+                      focusNode: _focusNode,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      maxLength: _otpLength,
+                      onChanged: (value) {
+                        setState(() {});
+                        if (value.length == _otpLength) {
+                          _onVerify();
+                        }
+                      },
                     ),
                   ),
+                ),
 
-                  SizedBox(height: 48.h),
-
-                  // OTP Slots (Tapping here opens keyboard)
-                  GestureDetector(
-                    onTap: () => _focusNode.requestFocus(),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(_otpLength, (index) {
-                        String otp = _otpController.text;
-                        bool isFocused = otp.length == index;
-                        bool isFilled = otp.length > index;
-                        String char = isFilled ? otp[index] : "";
-
-                        return Container(
-                          width: 64.w,
-                          height: 64.h,
-                          margin: EdgeInsets.symmetric(horizontal: 8.w),
-                          decoration: BoxDecoration(
-                            color: AppColors.surfaceDark,
-                            borderRadius: BorderRadius.circular(12.r),
-                            border: isFocused
-                                ? Border.all(
-                                    color: Colors.white.withValues(alpha: 0.5),
-                                    width: 1.5,
-                                  )
-                                : null,
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 20.h),
+                      // Header
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () => Navigator.pop(context),
+                            child: Icon(
+                              Icons.arrow_back,
+                              color: Colors.white,
+                              size: 26.sp,
+                            ),
                           ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            isFilled
-                                ? (index < otp.length - 1 ? '*' : char)
-                                : "",
+                          SizedBox(width: 24.w),
+                          Text(
+                            'Verification Code',
                             style: AppTextStyles.h4.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                        );
-                      }),
-                    ),
+                        ],
+                      ),
+
+                      const Spacer(flex: 1),
+
+                      // Subtitle
+                      Align(
+                        alignment: Alignment.center,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 32.w),
+                          child: Text(
+                            'Please check your email  to see the verification code',
+                            textAlign: TextAlign.center,
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              color: AppColors.textSecondaryDark,
+                              height: 1.5,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 48.h),
+
+                      // OTP Slots (Tapping here opens keyboard)
+                      GestureDetector(
+                        onTap: () => _focusNode.requestFocus(),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(_otpLength, (index) {
+                            String otp = _otpController.text;
+                            bool isFocused = otp.length == index;
+                            bool isFilled = otp.length > index;
+                            String char = isFilled ? otp[index] : "";
+
+                            return Container(
+                              width: 64.w,
+                              height: 64.h,
+                              margin: EdgeInsets.symmetric(horizontal: 8.w),
+                              decoration: BoxDecoration(
+                                color: AppColors.surfaceDark,
+                                borderRadius: BorderRadius.circular(12.r),
+                                border: isFocused
+                                    ? Border.all(
+                                        color:
+                                            Colors.white.withValues(alpha: 0.5),
+                                        width: 1.5,
+                                      )
+                                    : null,
+                              ),
+                              alignment: Alignment.center,
+                              child: Text(
+                                isFilled
+                                    ? (index < otp.length - 1 ? '*' : char)
+                                    : "",
+                                style: AppTextStyles.h4.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            );
+                          }),
+                        ),
+                      ),
+
+                      SizedBox(height: 48.h),
+
+                      // Continue Button
+                      CustomButton(
+                        text: 'Continue',
+                        onPressed: _otpController.text.length == _otpLength &&
+                                !_isVerifying
+                            ? _onVerify
+                            : null,
+                        isLoading: _isVerifying,
+                        type: ButtonType.gradient,
+                        size: ButtonSize.large,
+                        fullWidth: true,
+                        showTrailingArrow: true,
+                        hasGlow: true,
+                      ),
+
+                      const Spacer(flex: 2),
+                    ],
                   ),
-
-                  SizedBox(height: 48.h),
-
-                  // Continue Button
-                  CustomButton(
-                    text: 'Continue',
-                    onPressed: _otpController.text.length == _otpLength &&
-                            !_isVerifying
-                        ? _onVerify
-                        : null,
-                    isLoading: _isVerifying,
-                    type: ButtonType.gradient,
-                    size: ButtonSize.large,
-                    fullWidth: true,
-                    showTrailingArrow: true,
-                  ),
-
-                  const Spacer(flex: 2),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

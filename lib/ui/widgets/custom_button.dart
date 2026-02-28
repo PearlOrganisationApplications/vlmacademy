@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 
-enum ButtonType { primary, secondary, outline, text, gradient }
+enum ButtonType { primary, secondary, outline, text, gradient, glassmorphic }
 
 enum ButtonSize { small, medium, large }
 
@@ -27,6 +27,7 @@ class CustomButton extends StatelessWidget {
   final LinearGradient? gradient;
   final bool showTrailingArrow;
   final String? imageIcon;
+  final bool hasGlow;
 
   const CustomButton({
     super.key,
@@ -40,6 +41,7 @@ class CustomButton extends StatelessWidget {
     this.gradient,
     this.showTrailingArrow = false,
     this.imageIcon,
+    this.hasGlow = false,
   });
 
   // ─── Gradient button ────────────────────────────────────────────────────────
@@ -55,6 +57,19 @@ class CustomButton extends StatelessWidget {
         imageIcon: imageIcon,
         gradient: gradient ?? AppColors.primaryGradient,
         showTrailingArrow: showTrailingArrow,
+        height: _buttonHeight,
+        textStyle: _getTextStyle(),
+        fullWidth: fullWidth,
+        hasGlow: hasGlow,
+      );
+    }
+    if (type == ButtonType.glassmorphic) {
+      return _GlassmorphicButton(
+        text: text,
+        onPressed: isLoading ? null : onPressed,
+        isLoading: isLoading,
+        icon: icon,
+        imageIcon: imageIcon,
         height: _buttonHeight,
         textStyle: _getTextStyle(),
         fullWidth: fullWidth,
@@ -126,6 +141,7 @@ class CustomButton extends StatelessWidget {
           child: Padding(padding: padding, child: child),
         );
       case ButtonType.gradient:
+      case ButtonType.glassmorphic:
         return const SizedBox.shrink(); // handled above
     }
   }
@@ -167,6 +183,7 @@ class CustomButton extends StatelessWidget {
       case ButtonType.text:
         return TextButton.styleFrom(foregroundColor: AppColors.primary);
       case ButtonType.gradient:
+      case ButtonType.glassmorphic:
         return ElevatedButton.styleFrom(); // unused
     }
   }
@@ -207,6 +224,7 @@ class _GradientButton extends StatelessWidget {
     this.imageIcon,
     this.showTrailingArrow = false,
     this.fullWidth = false,
+    this.hasGlow = false,
   });
 
   final String text;
@@ -219,6 +237,7 @@ class _GradientButton extends StatelessWidget {
   final bool fullWidth;
   final double height;
   final TextStyle textStyle;
+  final bool hasGlow;
 
   @override
   Widget build(BuildContext context) {
@@ -228,8 +247,26 @@ class _GradientButton extends StatelessWidget {
         width: fullWidth ? double.infinity : null,
         height: height,
         decoration: BoxDecoration(
-          gradient: gradient,
-          borderRadius: BorderRadius.circular(16.r),
+          color: hasGlow ? AppColors.primaryDark : AppColors.primaryDark,
+          gradient: hasGlow ? null : gradient,
+          border: hasGlow
+              ? Border.all(
+                  color: AppColors.primary.withOpacity(0.8), width: 1.5)
+              : null,
+          borderRadius: BorderRadius.circular(24.r),
+          boxShadow: hasGlow
+              ? [
+                  BoxShadow(
+                    color: AppColors.primary.withOpacity(0.8),
+                    blurRadius: 4,
+                    spreadRadius: 1,
+                  ),
+                  BoxShadow(
+                    color: AppColors.primary.withOpacity(0.5),
+                    blurRadius: 16,
+                  ),
+                ]
+              : null,
         ),
         child: isLoading
             ? const Center(
@@ -293,6 +330,92 @@ class _GradientButton extends StatelessWidget {
                       ),
                     ),
                   ],
+                ],
+              ),
+      ),
+    );
+  }
+}
+
+// ─── Glassmorphic Button (internal) ───────────────────────────────────────────
+
+class _GlassmorphicButton extends StatelessWidget {
+  const _GlassmorphicButton({
+    required this.text,
+    required this.textStyle,
+    required this.height,
+    this.onPressed,
+    this.isLoading = false,
+    this.icon,
+    this.imageIcon,
+    this.fullWidth = false,
+  });
+
+  final String text;
+  final VoidCallback? onPressed;
+  final bool isLoading;
+  final IconData? icon;
+  final String? imageIcon;
+  final bool fullWidth;
+  final double height;
+  final TextStyle textStyle;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        width: fullWidth ? double.infinity : null,
+        height: height,
+        decoration: BoxDecoration(
+          color: const Color(0xFF1E293B).withOpacity(0.5),
+          borderRadius: BorderRadius.circular(30.r),
+          border: Border.all(color: Colors.white.withOpacity(0.1), width: 1),
+        ),
+        child: isLoading
+            ? const Center(
+                child: SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
+                ),
+              )
+            : Row(
+                mainAxisSize: fullWidth ? MainAxisSize.max : MainAxisSize.min,
+                mainAxisAlignment: fullWidth
+                    ? MainAxisAlignment.center
+                    : MainAxisAlignment.start,
+                children: [
+                  if (!fullWidth) SizedBox(width: 12.w),
+                  if (imageIcon != null) ...[
+                    Image.asset(imageIcon!, width: 24.sp, height: 24.sp),
+                    SizedBox(width: 12.w),
+                  ] else if (icon != null) ...[
+                    Icon(icon, size: 24.sp, color: Colors.white),
+                    SizedBox(width: 12.w),
+                  ],
+                  if (fullWidth)
+                    Text(
+                      text,
+                      style: textStyle.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    )
+                  else
+                    Padding(
+                      padding: EdgeInsets.only(right: 12.w),
+                      child: Text(
+                        text,
+                        style: textStyle.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
                 ],
               ),
       ),

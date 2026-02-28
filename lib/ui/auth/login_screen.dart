@@ -60,137 +60,141 @@ class _LoginScreenState extends State<LoginScreen> {
     ));
 
     return Scaffold(
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: constraints.maxHeight,
-                ),
-                child: IntrinsicHeight(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(height: 64.h),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/bgimage.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: SafeArea(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: constraints.maxHeight,
+                  ),
+                  child: IntrinsicHeight(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 64.h),
 
-                      // Logo
-                      const _LogoBadge(),
+                        // Logo
+                        const _LogoBadge(),
 
-                      SizedBox(height: 40.h),
+                        SizedBox(height: 40.h),
 
-                      // Headline
-                      Text(
-                        'Learning Never Sleeps\nat VLM Academy',
-                        style: AppTextStyles.h3.copyWith(
-                          color: AppColors.textPrimaryDark,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-
-                      SizedBox(height: 40.h),
-
-                      // Role tabs
-                      _RoleTabs(
-                        selected: _selectedRole,
-                        onChanged: (r) => setState(() => _selectedRole = r),
-                      ),
-
-                      SizedBox(height: 32.h),
-
-                      // Phone input + Send OTP
-                      _PhoneRow(
-                        controller: _phoneController,
-                        isLoading: _isLoading,
-                        onSend: _onSendOtp,
-                      ),
-
-                      SizedBox(height: 56.h),
-
-                      // Divider
-                      Row(
-                        children: [
-                          const Expanded(
-                            child: Divider(
-                                color: AppColors.borderDark, thickness: 1),
+                        // Headline
+                        Text.rich(
+                          TextSpan(
+                            text: 'Learning Never Sleeps\nat ',
+                            style: AppTextStyles.h3.copyWith(
+                              color: AppColors.textPrimaryDark,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            children: const [
+                              TextSpan(
+                                text: 'VLM Academy',
+                                style: TextStyle(color: AppColors.primary),
+                              ),
+                            ],
                           ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 12.w),
-                            child: Text(
-                              'Or continue with',
+                          textAlign: TextAlign.center,
+                        ),
+
+                        SizedBox(height: 40.h),
+
+                        // Role tabs
+                        _RoleTabs(
+                          selected: _selectedRole,
+                          onChanged: (r) => setState(() => _selectedRole = r),
+                        ),
+
+                        SizedBox(height: 32.h),
+
+                        // Phone input + Send OTP
+                        _PhoneRow(
+                          controller: _phoneController,
+                          isLoading: _isLoading,
+                          onSend: _onSendOtp,
+                        ),
+
+                        SizedBox(height: 56.h),
+
+                        // Divider
+                        Row(
+                          children: [
+                            const Expanded(
+                              child: Divider(
+                                  color: AppColors.borderDark, thickness: 1),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 12.w),
+                              child: Text(
+                                'Or continue with',
+                                style: AppTextStyles.bodySmall.copyWith(
+                                  color: AppColors.textSecondaryDark,
+                                ),
+                              ),
+                            ),
+                            const Expanded(
+                              child: Divider(
+                                  color: AppColors.borderDark, thickness: 1),
+                            ),
+                          ],
+                        ),
+
+                        SizedBox(height: 28.h),
+
+                        // Google Sign-In — glassmorphic
+                        CustomButton(
+                          text: 'Sign in with Google',
+                          onPressed: _onGoogleSignIn,
+                          type: ButtonType.glassmorphic,
+                          size: ButtonSize.large,
+                          imageIcon: AppImages.googleIcon,
+                          fullWidth: true,
+                        ),
+
+                        SizedBox(height: 16.h),
+
+                        const Spacer(),
+
+                        // Sign Up link
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Don't have an Account? ",
                               style: AppTextStyles.bodySmall.copyWith(
                                 color: AppColors.textSecondaryDark,
                               ),
                             ),
-                          ),
-                          const Expanded(
-                            child: Divider(
-                                color: AppColors.borderDark, thickness: 1),
-                          ),
-                        ],
-                      ),
-
-                      SizedBox(height: 28.h),
-
-                      // Google Sign-In — primary gradient
-                      CustomButton(
-                        text: 'Sign in with Google',
-                        onPressed: _onGoogleSignIn,
-                        type: ButtonType.gradient,
-                        size: ButtonSize.large,
-                        imageIcon: AppImages.googleIcon,
-                        showTrailingArrow: true,
-                        fullWidth: true,
-                      ),
-
-                      SizedBox(height: 16.h),
-
-                      // Sign in with Account — blue gradient
-                      CustomButton(
-                        text: 'Sign in with Email',
-                        onPressed: _onSignInWithAccount,
-                        type: ButtonType.gradient,
-                        size: ButtonSize.large,
-                        icon: Icons.person_outline_rounded,
-                        showTrailingArrow: true,
-                        fullWidth: true,
-                      ),
-
-                      const Spacer(),
-
-                      // Sign Up link
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Don't have an Account? ",
-                            style: AppTextStyles.bodySmall.copyWith(
-                              color: AppColors.textSecondaryDark,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: _onSignUp,
-                            child: Text(
-                              'SIGN UP',
-                              style: AppTextStyles.bodySmall.copyWith(
-                                color: AppColors.primary,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 0.5,
+                            GestureDetector(
+                              onTap: _onSignUp,
+                              child: Text(
+                                'SIGN UP',
+                                style: AppTextStyles.bodySmall.copyWith(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 0.5,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
 
-                      SizedBox(height: 32.h),
-                    ],
+                        SizedBox(height: 32.h),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );
@@ -216,8 +220,9 @@ class _RoleTabs extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(4.r),
       decoration: BoxDecoration(
-        color: AppColors.surfaceDark,
-        borderRadius: BorderRadius.circular(14.r),
+        color: const Color(0xFF1E293B).withOpacity(0.5),
+        borderRadius: BorderRadius.circular(24.r),
+        border: Border.all(color: Colors.white.withOpacity(0.1), width: 1),
       ),
       child: Row(
         children: _roles.map((entry) {
@@ -231,8 +236,27 @@ class _RoleTabs extends StatelessWidget {
                 curve: Curves.easeInOut,
                 padding: EdgeInsets.symmetric(vertical: 12.h),
                 decoration: BoxDecoration(
-                  gradient: isActive ? AppColors.primaryGradient : null,
-                  borderRadius: BorderRadius.circular(12.r),
+                  color: isActive
+                      ? AppColors.primary.withOpacity(0.15)
+                      : Colors.transparent,
+                  border: isActive
+                      ? Border.all(
+                          color: AppColors.primary.withOpacity(0.8), width: 1.5)
+                      : Border.all(color: Colors.transparent, width: 1.5),
+                  borderRadius: BorderRadius.circular(20.r),
+                  boxShadow: isActive
+                      ? [
+                          BoxShadow(
+                            color: AppColors.primary.withOpacity(0.8),
+                            blurRadius: 4,
+                            spreadRadius: 1,
+                          ),
+                          BoxShadow(
+                            color: AppColors.primary.withOpacity(0.5),
+                            blurRadius: 16,
+                          ),
+                        ]
+                      : null,
                 ),
                 child: Text(
                   label,
@@ -274,8 +298,10 @@ class _PhoneRow extends StatelessWidget {
           child: Container(
             height: 64.h,
             decoration: BoxDecoration(
-              color: AppColors.surfaceDark,
+              color: const Color(0xFF1E293B),
               borderRadius: BorderRadius.circular(32.r),
+              border:
+                  Border.all(color: Colors.white.withOpacity(0.1), width: 1),
             ),
             child: Row(
               children: [
@@ -297,8 +323,8 @@ class _PhoneRow extends StatelessWidget {
                     decoration: InputDecoration(
                       hintText: 'Mobile Number (+91)',
                       hintStyle: AppTextStyles.bodySmall.copyWith(
-                        color: AppColors.textSecondaryDark,
-                      ),
+                          // color: AppColors.textSecondaryDark,
+                          ),
                       border: InputBorder.none,
                       enabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,
@@ -315,11 +341,14 @@ class _PhoneRow extends StatelessWidget {
                   padding:
                       EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
                   child: CustomButton(
-                    text: 'Send otp',
+                    text: 'Send OTP',
                     onPressed: isLoading ? null : onSend,
                     type: ButtonType.gradient,
+                    gradient: const LinearGradient(
+                        colors: [AppColors.primaryDark, AppColors.primaryDark]),
                     size: ButtonSize.medium,
                     isLoading: isLoading,
+                    hasGlow: true,
                   ),
                 ),
               ],
