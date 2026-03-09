@@ -14,47 +14,64 @@ class TestsScreen extends StatelessWidget {
     final tests = MockDataSource.mockTests;
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         title: const Text('Tests'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
+      body: Stack(
         children: [
-          // Daily Test Section
-          Text('Daily Test', style: AppTextStyles.h5),
-          const SizedBox(height: 12),
-          _buildTestCard(
-            context,
-            tests.firstWhere((t) => t.type == TestType.daily),
-            AppColors.primary,
-          ),
-          const SizedBox(height: 24),
-          
-          // Mock Tests Section
-          Text('Mock Tests', style: AppTextStyles.h5),
-          const SizedBox(height: 12),
-          CustomCard(
-            child: Column(
-              children: [
-                _buildMockTestItem('Mathematics - Full Syllabus', '100 Questions', '3 hours', false),
-                const Divider(),
-                _buildMockTestItem('Science - Chapter 1-5', '50 Questions', '1.5 hours', true),
-              ],
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/bgimage.png',
+              fit: BoxFit.cover,
             ),
           ),
-          const SizedBox(height: 24),
-          
-          // Practice Tests
-          Text('Practice Tests', style: AppTextStyles.h5),
-          const SizedBox(height: 12),
-          CustomCard(
-            child: Column(
-              children: [
-                _buildPracticeTestItem('Algebra - Quick Practice', '20 Questions', '30 min'),
-                const Divider(),
-                _buildPracticeTestItem('Physics - Mechanics', '15 Questions', '20 min'),
-              ],
-            ),
+          ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              // Daily Test Section
+              Text('Daily Test', style: AppTextStyles.h5),
+              const SizedBox(height: 12),
+              _buildTestCard(
+                context,
+                tests.firstWhere((t) => t.type == TestType.daily),
+                AppColors.primary,
+              ),
+              const SizedBox(height: 24),
+
+              // Mock Tests Section
+              Text('Mock Tests', style: AppTextStyles.h5),
+              const SizedBox(height: 12),
+              CustomCard(
+                child: Column(
+                  children: [
+                    _buildMockTestItem('Mathematics - Full Syllabus',
+                        '100 Questions', '3 hours', false),
+                    const Divider(),
+                    _buildMockTestItem('Science - Chapter 1-5', '50 Questions',
+                        '1.5 hours', true),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Practice Tests
+              Text('Practice Tests', style: AppTextStyles.h5),
+              const SizedBox(height: 12),
+              CustomCard(
+                child: Column(
+                  children: [
+                    _buildPracticeTestItem(
+                        'Algebra - Quick Practice', '20 Questions', '30 min'),
+                    const Divider(),
+                    _buildPracticeTestItem(
+                        'Physics - Mechanics', '15 Questions', '20 min'),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -97,7 +114,8 @@ class TestsScreen extends StatelessWidget {
           const SizedBox(height: 16),
           Row(
             children: [
-              _buildInfoChip(Icons.help_outline, '${test.questions.length} Questions'),
+              _buildInfoChip(
+                  Icons.help_outline, '${test.questions.length} Questions'),
               const SizedBox(width: 12),
               _buildInfoChip(Icons.access_time, '${test.durationMinutes} min'),
               const SizedBox(width: 12),
@@ -133,7 +151,8 @@ class TestsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMockTestItem(String title, String questions, String duration, bool attempted) {
+  Widget _buildMockTestItem(
+      String title, String questions, String duration, bool attempted) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
@@ -144,7 +163,8 @@ class TestsScreen extends StatelessWidget {
               color: AppColors.secondary.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: const Icon(Icons.assignment, color: AppColors.secondary, size: 24),
+            child: const Icon(Icons.assignment,
+                color: AppColors.secondary, size: 24),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -178,13 +198,15 @@ class TestsScreen extends StatelessWidget {
               ),
             )
           else
-            const Icon(Icons.chevron_right, color: AppColors.textSecondaryLight),
+            const Icon(Icons.chevron_right,
+                color: AppColors.textSecondaryLight),
         ],
       ),
     );
   }
 
-  Widget _buildPracticeTestItem(String title, String questions, String duration) {
+  Widget _buildPracticeTestItem(
+      String title, String questions, String duration) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
@@ -195,7 +217,8 @@ class TestsScreen extends StatelessWidget {
               color: AppColors.accent.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: const Icon(Icons.edit_note, color: AppColors.accent, size: 24),
+            child:
+                const Icon(Icons.edit_note, color: AppColors.accent, size: 24),
           ),
           const SizedBox(width: 12),
           Expanded(

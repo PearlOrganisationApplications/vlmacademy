@@ -47,7 +47,11 @@ class _SignupScreenState extends State<SignupScreen> {
     setState(() => _isLoading = false);
 
     // After signup, navigate to profile setup or dashboard
-    Navigator.pushReplacementNamed(context, AppRoutes.studentDashboard);
+    if (_selectedRole == _Role.teacher) {
+      Navigator.pushReplacementNamed(context, AppRoutes.teacherOnboarding);
+    } else {
+      Navigator.pushReplacementNamed(context, AppRoutes.studentDashboard);
+    }
   }
 
   void _onLogin() {

@@ -162,7 +162,8 @@ class _StudentDashboardState extends State<StudentDashboard> {
           screens: _screens,
           items: _navBarItems(),
           confineToSafeArea: true,
-          backgroundColor: AppColors.backgroundDark,
+          backgroundColor: const Color(
+              0xFF0F172A), // Reverting to a dark background for the nav bar area
           navBarHeight: kBottomNavigationBarHeight,
           handleAndroidBackButtonPress: false,
           resizeToAvoidBottomInset: true,
@@ -181,7 +182,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
             ),
           ),
           decoration: const NavBarDecoration(
-            colorBehindNavBar: AppColors.backgroundDark,
+            colorBehindNavBar: Color(0xFF0F172A),
             boxShadow: [
               BoxShadow(
                 color: Colors.black12,

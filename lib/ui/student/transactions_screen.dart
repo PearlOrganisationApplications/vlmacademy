@@ -6,7 +6,6 @@ class TransactionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const Color bgColor = Color(0xFF030712);
     const Color accentBlue = Color(0xFF3B82F6);
     const Color textBody = Color(0xFF94A3B8);
 
@@ -39,9 +38,9 @@ class TransactionsScreen extends StatelessWidget {
     ];
 
     return Scaffold(
-      backgroundColor: bgColor,
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
-        backgroundColor: bgColor,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded,
@@ -49,83 +48,96 @@ class TransactionsScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          'Transactions',
+          "Transaction History",
           style: TextStyle(
-              color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight
+                  .w600), // Assuming AppTextStyles.h5 is equivalent to this
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.search, color: Colors.white70),
+            icon: const Icon(Icons.search, color: Colors.white, size: 22),
             onPressed: () {},
           ),
         ],
       ),
-      body: ListView.separated(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        itemCount: transactions.length,
-        separatorBuilder: (context, index) =>
-            const Divider(color: Colors.white12, height: 1),
-        itemBuilder: (context, index) {
-          final item = transactions[index];
-          return ListTile(
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            leading: Container(
-              width: 56,
-              height: 56,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                image: DecorationImage(
-                  image: NetworkImage(item['image']!),
-                  fit: BoxFit.cover,
-                ),
-              ),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/bgimage.png',
+              fit: BoxFit.cover,
             ),
-            title: Text(
-              item['title']!,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600),
-            ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 4),
-                Text(
-                  item['subtitle']!,
-                  style: const TextStyle(color: textBody, fontSize: 13),
-                ),
-                const SizedBox(height: 8),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          ),
+          ListView.separated(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            itemCount: transactions.length,
+            separatorBuilder: (context, index) =>
+                const Divider(color: Colors.white12, height: 1),
+            itemBuilder: (context, index) {
+              final item = transactions[index];
+              return ListTile(
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                leading: Container(
+                  width: 56,
+                  height: 56,
                   decoration: BoxDecoration(
-                    color: accentBlue.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: const Text(
-                    'Paid',
-                    style: TextStyle(
-                        color: accentBlue,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700),
+                    borderRadius: BorderRadius.circular(12),
+                    image: DecorationImage(
+                      image: NetworkImage(item['image']!),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-              ],
-            ),
-            onTap: () {
-              Navigator.of(context, rootNavigator: true).push(
-                MaterialPageRoute(
-                  builder: (context) => ReceiptScreen(
-                    courseName: item['title']!,
-                    category: item['subtitle']!,
-                  ),
+                title: Text(
+                  item['title']!,
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600),
                 ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 4),
+                    Text(
+                      item['subtitle']!,
+                      style: const TextStyle(color: textBody, fontSize: 13),
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: accentBlue.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: const Text(
+                        'Paid',
+                        style: TextStyle(
+                            color: accentBlue,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  ],
+                ),
+                onTap: () {
+                  Navigator.of(context, rootNavigator: true).push(
+                    MaterialPageRoute(
+                      builder: (context) => ReceiptScreen(
+                        courseName: item['title']!,
+                        category: item['subtitle']!,
+                      ),
+                    ),
+                  );
+                },
               );
             },
-          );
-        },
+          ),
+        ],
       ),
     );
   }

@@ -11,6 +11,8 @@ import '../../ui/student/tests_screen.dart';
 import '../../ui/student/wallet_screen.dart';
 import '../../ui/student/profile_screen.dart';
 import '../../ui/teacher/teacher_dashboard.dart';
+import '../../ui/auth/teacher_onboarding_screen.dart';
+import '../../ui/auth/teacher_onboarding/profile_review_screen.dart';
 
 class AppRoutes {
   // Core routes
@@ -23,6 +25,8 @@ class AppRoutes {
   static const String emailLogin = '/email-login';
   static const String signup = '/signup';
   static const String roleSelection = '/role-selection';
+  static const String teacherOnboarding = '/teacher/onboarding';
+  static const String teacherProfileReview = '/teacher/profile-review';
 
   // Student routes
   static const String studentDashboard = '/student/dashboard';
@@ -77,6 +81,13 @@ class AppRoutes {
 
       case teacherDashboard:
         return MaterialPageRoute(builder: (_) => const TeacherDashboard());
+
+      case teacherOnboarding:
+        return MaterialPageRoute(
+            builder: (_) => const TeacherOnboardingScreen());
+
+      case teacherProfileReview:
+        return MaterialPageRoute(builder: (_) => const ProfileReviewScreen());
 
       default:
         return MaterialPageRoute(

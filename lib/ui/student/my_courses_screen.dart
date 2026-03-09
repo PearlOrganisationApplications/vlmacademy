@@ -106,28 +106,38 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
         isOngoing ? _ongoingCourses : _completedCourses;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF081426),
-      body: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 10),
-            _buildHeader(),
-            const SizedBox(height: 25),
-            _buildSearchBar(),
-            const SizedBox(height: 25),
-            _buildToggleTabs(),
-            const SizedBox(height: 20),
-            Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                itemCount: currentCourses.length,
-                itemBuilder: (context, index) {
-                  return _buildCourseCard(currentCourses[index]);
-                },
-              ),
+      backgroundColor: Colors.transparent,
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/bgimage.png',
+              fit: BoxFit.cover,
             ),
-          ],
-        ),
+          ),
+          SafeArea(
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                _buildHeader(),
+                const SizedBox(height: 25),
+                _buildSearchBar(),
+                const SizedBox(height: 25),
+                _buildToggleTabs(),
+                const SizedBox(height: 20),
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    itemCount: currentCourses.length,
+                    itemBuilder: (context, index) {
+                      return _buildCourseCard(currentCourses[index]);
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

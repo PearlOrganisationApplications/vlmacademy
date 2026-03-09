@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../core/constants/app_images.dart';
 import '../../core/routes/app_routes.dart';
+import '../../core/services/onboarding_service.dart';
 
 /// Entry point screen shown on app launch.
 ///
@@ -72,20 +73,27 @@ class _SplashScreenState extends State<SplashScreen>
   void _navigateToNext() {
     if (!mounted) return;
 
-    // TODO: Replace with real checks from SharedPreferences / auth service
     final bool isLoggedIn = _checkIsLoggedIn();
     final bool hasSeenOnboarding = _checkHasSeenOnboarding();
 
-    final String route;
     if (isLoggedIn) {
-      route = AppRoutes.studentDashboard;
-    } else if (hasSeenOnboarding) {
-      route = AppRoutes.login;
-    } else {
-      route = AppRoutes.onboarding;
+      Navigator.pushReplacementNamed(context, AppRoutes.studentDashboard);
+      return;
     }
 
-    Navigator.pushReplacementNamed(context, route);
+    // Check Teacher Onboarding Status
+    OnboardingService.init().then((onboardingService) {
+      if (!mounted) return;
+
+      if (onboardingService.currentStep != TeacherOnboardingStep.signup &&
+          onboardingService.currentStep != TeacherOnboardingStep.completed) {
+        Navigator.pushReplacementNamed(context, AppRoutes.teacherOnboarding);
+      } else if (hasSeenOnboarding) {
+        Navigator.pushReplacementNamed(context, AppRoutes.login);
+      } else {
+        Navigator.pushReplacementNamed(context, AppRoutes.onboarding);
+      }
+    });
   }
 
   // TODO: Replace stubs with SharedPreferences / auth service reads
@@ -118,7 +126,8 @@ class _SplashScreenState extends State<SplashScreen>
             child: Image.asset(
               AppImages.vlmLogo,
               width: 180.w,
-              height: 180.w, // square — use .w for both so it stays proportional
+              height:
+                  180.w, // square — use .w for both so it stays proportional
               fit: BoxFit.contain,
             ),
           ),
