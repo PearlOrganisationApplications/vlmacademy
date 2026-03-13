@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
+import '../student/student_dashboard.dart';
 
 class TeacherHomeScreen extends StatelessWidget {
   const TeacherHomeScreen({super.key});
@@ -18,7 +19,7 @@ class TeacherHomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 16.h),
-              _buildTopBar()
+              _buildTopBar(context)
                   .animate()
                   .fadeIn(duration: 600.ms)
                   .slideY(begin: -0.2, end: 0, curve: Curves.easeOutQuad),
@@ -72,64 +73,80 @@ class TeacherHomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTopBar() {
+  Widget _buildTopBar(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            Container(
-              width: 52.w,
-              height: 52.w,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: AppColors.primary, width: 2),
-              ),
-              child: Center(
-                child: Container(
-                  width: 44.w,
-                  height: 44.w,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: AppColors.primaryGradient,
-                  ),
-                  child: Center(
-                    child: Text(
-                      'PR',
-                      style: AppTextStyles.labelMedium.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+        Expanded(
+          child: Row(
+            children: [
+              Container(
+                width: 52.w,
+                height: 52.w,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: AppColors.primary, width: 2),
+                ),
+                child: Center(
+                  child: Container(
+                    width: 44.w,
+                    height: 44.w,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: AppColors.primaryGradient,
+                    ),
+                    child: Center(
+                      child: Text(
+                        'PR',
+                        style: AppTextStyles.labelMedium.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(width: 12.w),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'WELCOME BACK,',
-                  style: AppTextStyles.bodySmall.copyWith(
-                    color: AppColors.textSecondaryDark,
-                    fontSize: 10.sp,
-                    letterSpacing: 0.5,
-                  ),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'WELCOME BACK,',
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: AppColors.textSecondaryDark,
+                        fontSize: 10.sp,
+                        letterSpacing: 0.5,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      'Priya',
+                      style: AppTextStyles.h5.copyWith(
+                        color: AppColors.textPrimaryDark,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
                 ),
-                Text(
-                  'Priya',
-                  style: AppTextStyles.h5.copyWith(
-                    color: AppColors.textPrimaryDark,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
+        SizedBox(width: 8.w),
         Row(
           children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context, rootNavigator: true).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const StudentDashboard()),
+                );
+              },
+              child: _buildIconButton(Icons.swap_horiz, hasBadge: false),
+            ),
+            SizedBox(width: 12.w),
             _buildIconButton(Icons.notifications_outlined, hasBadge: true),
             SizedBox(width: 12.w),
             Container(

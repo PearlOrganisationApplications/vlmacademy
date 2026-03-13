@@ -1,11 +1,13 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../core/constants/app_images.dart';
 import '../../core/routes/app_routes.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
-import '../widgets/custom_button.dart';
+import '../shared/background_screen.dart';
 
 class OtpScreen extends StatefulWidget {
   const OtpScreen({super.key, this.contactInfo = '+91 9876543210'});
@@ -22,17 +24,46 @@ class _OtpScreenState extends State<OtpScreen> {
   final int _otpLength = 4;
   bool _isVerifying = false;
 
+  // Timer logic
+  late Timer _timer;
+  int _secondsRemaining = 120; // 2 minutes
+  bool _canResend = false;
+
   @override
   void initState() {
     super.initState();
-    // Auto-focus on entry
+    _startTimer();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _focusNode.requestFocus();
     });
   }
 
+  void _startTimer() {
+    _canResend = false;
+    _secondsRemaining = 120;
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_secondsRemaining == 0) {
+        setState(() {
+          _canResend = true;
+          timer.cancel();
+        });
+      } else {
+        setState(() {
+          _secondsRemaining--;
+        });
+      }
+    });
+  }
+
+  String get _timerText {
+    final minutes = (_secondsRemaining ~/ 60).toString().padLeft(2, '0');
+    final seconds = (_secondsRemaining % 60).toString().padLeft(2, '0');
+    return '$minutes:$seconds';
+  }
+
   @override
   void dispose() {
+    _timer.cancel();
     _otpController.dispose();
     _focusNode.dispose();
     super.dispose();
@@ -42,172 +73,229 @@ class _OtpScreenState extends State<OtpScreen> {
     if (_otpController.text.length != _otpLength) return;
 
     setState(() => _isVerifying = true);
-
-    // Mocking API call for OTP verification
     await Future.delayed(const Duration(seconds: 1));
 
     if (!mounted) return;
     setState(() => _isVerifying = false);
 
-    // Navigate to dashboard and clear the stack to prevent going back to login
     Navigator.pushNamedAndRemoveUntil(
       context,
-      AppRoutes.studentDashboard,
+      AppRoutes.studentProfileSetup,
       (route) => false,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/bgimage.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: SafeArea(
-          child: GestureDetector(
-            onTap: () => FocusScope.of(context).unfocus(),
-            child: Stack(
-              children: [
-                // Hidden TextField to capture system keyboard input
-                Opacity(
-                  opacity: 0,
-                  child: SizedBox(
-                    height: 1,
-                    width: 1,
-                    child: TextField(
-                      controller: _otpController,
-                      focusNode: _focusNode,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      maxLength: _otpLength,
-                      onChanged: (value) {
-                        setState(() {});
-                        if (value.length == _otpLength) {
-                          _onVerify();
-                        }
-                      },
+    return BackgroundScreen(
+      useSafeArea: false,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 24.w),
+          child: Column(
+            children: [
+              SizedBox(height: 20.h),
+              // 1. Logo
+              Center(
+                child: Image.asset(
+                  AppImages.vlmLogo,
+                  width: 100.w,
+                  fit: BoxFit.contain,
+                ),
+              ),
+              SizedBox(height: 30.h),
+              // 2. Illustration
+              Center(
+                child: Image.asset(
+                  AppImages.otpVerification,
+                  height: 180.h,
+                  fit: BoxFit.contain,
+                ),
+              ),
+              SizedBox(height: 30.h),
+              // 3. Verification Msg
+              Text(
+                'Verification Code',
+                style: AppTextStyles.h4.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 8.h),
+              Text(
+                'Verification required for ${widget.contactInfo}',
+                style: AppTextStyles.bodySmall.copyWith(color: Colors.white70),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 40.h),
+              // 4. OTP Field (Glassmorphic)
+              _buildOtpInput(),
+              SizedBox(height: 40.h),
+              // 5. Verify Button
+              _buildVerifyButton(),
+              SizedBox(height: 24.h),
+              // 6. Msg with Time
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.access_time, color: Colors.white54, size: 16.sp),
+                  SizedBox(width: 8.w),
+                  Text(
+                    _timerText,
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 20.h),
-                      // Header
-                      Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () => Navigator.pop(context),
-                            child: Icon(
-                              Icons.arrow_back,
-                              color: Colors.white,
-                              size: 26.sp,
-                            ),
-                          ),
-                          SizedBox(width: 24.w),
-                          Text(
-                            'Verification Code',
-                            style: AppTextStyles.h4.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const Spacer(flex: 1),
-
-                      // Subtitle
-                      Align(
-                        alignment: Alignment.center,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 32.w),
-                          child: Text(
-                            'Please check your email  to see the verification code',
-                            textAlign: TextAlign.center,
-                            style: AppTextStyles.bodyMedium.copyWith(
-                              color: AppColors.textSecondaryDark,
-                              height: 1.5,
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(height: 48.h),
-
-                      // OTP Slots (Tapping here opens keyboard)
-                      GestureDetector(
-                        onTap: () => _focusNode.requestFocus(),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: List.generate(_otpLength, (index) {
-                            String otp = _otpController.text;
-                            bool isFocused = otp.length == index;
-                            bool isFilled = otp.length > index;
-                            String char = isFilled ? otp[index] : "";
-
-                            return Container(
-                              width: 64.w,
-                              height: 64.h,
-                              margin: EdgeInsets.symmetric(horizontal: 8.w),
-                              decoration: BoxDecoration(
-                                color: AppColors.surfaceDark,
-                                borderRadius: BorderRadius.circular(12.r),
-                                border: isFocused
-                                    ? Border.all(
-                                        color:
-                                            Colors.white.withValues(alpha: 0.5),
-                                        width: 1.5,
-                                      )
-                                    : null,
-                              ),
-                              alignment: Alignment.center,
-                              child: Text(
-                                isFilled
-                                    ? (index < otp.length - 1 ? '*' : char)
-                                    : "",
-                                style: AppTextStyles.h4.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            );
-                          }),
-                        ),
-                      ),
-
-                      SizedBox(height: 48.h),
-
-                      // Continue Button
-                      CustomButton(
-                        text: 'Continue',
-                        onPressed: _otpController.text.length == _otpLength &&
-                                !_isVerifying
-                            ? _onVerify
-                            : null,
-                        isLoading: _isVerifying,
-                        type: ButtonType.gradient,
-                        size: ButtonSize.large,
-                        fullWidth: true,
-                        showTrailingArrow: true,
-                        hasGlow: true,
-                      ),
-
-                      const Spacer(flex: 2),
-                    ],
+                ],
+              ),
+              SizedBox(height: 16.h),
+              // 7. Resend Msg
+              GestureDetector(
+                onTap: _canResend ? _startTimer : null,
+                child: Text(
+                  "Didn't receive code? Resend",
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: _canResend ? AppColors.primaryLight : Colors.white38,
+                    fontWeight:
+                        _canResend ? FontWeight.bold : FontWeight.normal,
+                    decoration: _canResend ? TextDecoration.underline : null,
                   ),
                 ),
-              ],
-            ),
+              ),
+
+              // Spacing for Sticky Footer feel
+              SizedBox(height: 60.h),
+
+              // 8. Bottom Security Note
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.verified_user_outlined,
+                      color: Colors.white24, size: 16.sp),
+                  SizedBox(width: 8.w),
+                  Text(
+                    'Security is our priority',
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: Colors.white24,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20.h),
+            ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildOtpInput() {
+    return GestureDetector(
+      onTap: () => _focusNode.requestFocus(),
+      child: Stack(
+        children: [
+          // Invisible TextField
+          Opacity(
+            opacity: 0,
+            child: SizedBox(
+              width: 1,
+              height: 1,
+              child: TextField(
+                controller: _otpController,
+                focusNode: _focusNode,
+                keyboardType: TextInputType.number,
+                maxLength: _otpLength,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                onChanged: (v) {
+                  setState(() {});
+                  if (v.length == _otpLength) _onVerify();
+                },
+              ),
+            ),
+          ),
+          // Visual Slots
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: List.generate(_otpLength, (index) {
+              final isFocused = _otpController.text.length == index;
+              final hasChar = _otpController.text.length > index;
+              return Container(
+                width: 60.w,
+                height: 60.w,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.08),
+                  borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(
+                    color: isFocused ? AppColors.primary : Colors.white10,
+                    width: isFocused ? 2.w : 1.w,
+                  ),
+                  boxShadow: isFocused
+                      ? [
+                          BoxShadow(
+                            color: AppColors.primary.withOpacity(0.2),
+                            blurRadius: 10,
+                            spreadRadius: 2,
+                          )
+                        ]
+                      : [],
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  hasChar ? _otpController.text[index] : '',
+                  style: AppTextStyles.h4.copyWith(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+              );
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildVerifyButton() {
+    final bool isReady = _otpController.text.length == _otpLength;
+    return Container(
+      width: double.infinity,
+      height: 56.h,
+      decoration: BoxDecoration(
+        gradient: isReady ? AppColors.primaryGradient : null,
+        color: isReady ? null : Colors.white.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(28.r),
+        boxShadow: isReady
+            ? [
+                BoxShadow(
+                  color: AppColors.primary.withOpacity(0.3),
+                  blurRadius: 15,
+                  spreadRadius: 2,
+                  offset: const Offset(0, 4),
+                )
+              ]
+            : [],
+      ),
+      child: ElevatedButton(
+        onPressed: (isReady && !_isVerifying) ? _onVerify : null,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(28.r)),
+        ),
+        child: _isVerifying
+            ? SizedBox(
+                width: 24.h,
+                height: 24.h,
+                child: const CircularProgressIndicator(
+                    color: Colors.white, strokeWidth: 2))
+            : Text(
+                'Verify',
+                style: AppTextStyles.buttonLarge.copyWith(
+                  color: isReady ? Colors.white : Colors.white38,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
       ),
     );
   }

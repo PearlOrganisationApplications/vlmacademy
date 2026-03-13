@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'ui/shared/splash_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
@@ -49,7 +50,7 @@ class VlmAcademyApp extends StatelessWidget {
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
             themeMode: ThemeMode.dark,
-            initialRoute: AppRoutes.splash,
+            home: const SplashScreen(),
             onGenerateRoute: AppRoutes.generateRoute,
           ),
         );

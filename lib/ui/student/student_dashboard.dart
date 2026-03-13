@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
-import '../../core/theme/app_colors.dart';
 import '../widgets/custom_app_bar.dart';
 import 'home_screen.dart';
-import 'my_courses_screen.dart';
-import 'tests_screen.dart';
-import 'transactions_screen.dart';
+import 'chat/ask_doubt_screen.dart';
+import 'daily_mcq_screen.dart';
 import 'profile_screen.dart';
+import 'tests_screen.dart';
 
 class StudentDashboard extends StatefulWidget {
   const StudentDashboard({super.key});
@@ -29,12 +29,12 @@ class _StudentDashboardState extends State<StudentDashboard> {
 
     _controller = PersistentTabController(initialIndex: 0);
 
-    _screens = const [
-      HomeScreen(),
-      MyCoursesScreen(),
-      TestsScreen(),
-      TransactionsScreen(),
-      ProfileScreen(),
+    _screens = [
+      const HomeScreen(),
+      const AskDoubtScreen(),
+      const DailyMcqScreen(),
+      const TestsScreen(),
+      const ProfileScreen(),
     ];
 
     _controller.addListener(_handleTabChange);
@@ -58,30 +58,24 @@ class _StudentDashboardState extends State<StudentDashboard> {
   List<PersistentBottomNavBarItem> _navBarItems() {
     return [
       _buildNavItem(
-        title: "HOME",
+        title: "Home",
         icon: FontAwesomeIcons.house,
       ),
       _buildNavItem(
-        title: "MY COURSES",
-        icon: FontAwesomeIcons.bookOpen,
-      ),
-      PersistentBottomNavBarItem(
-        title: "TESTS",
-        icon: _buildCenterButton(),
-        activeColorPrimary: AppColors.primary,
-        inactiveColorPrimary: AppColors.textSecondaryLight,
-        textStyle: const TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 10,
-        ),
+        title: "Doubt",
+        icon: FontAwesomeIcons.circleQuestion,
       ),
       _buildNavItem(
-        title: "TRANSACTION",
-        icon: FontAwesomeIcons.wallet,
+        title: "MCQ",
+        icon: FontAwesomeIcons.listCheck,
       ),
       _buildNavItem(
-        title: "PROFILE",
-        icon: FontAwesomeIcons.user,
+        title: "Live",
+        icon: FontAwesomeIcons.towerBroadcast,
+      ),
+      _buildNavItem(
+        title: "Profile",
+        icon: FontAwesomeIcons.circleUser,
       ),
     ];
   }
@@ -92,38 +86,14 @@ class _StudentDashboardState extends State<StudentDashboard> {
   }) {
     return PersistentBottomNavBarItem(
       title: title,
-      icon: FaIcon(icon, size: 20),
-      activeColorPrimary: AppColors.primary,
-      inactiveColorPrimary: AppColors.textSecondaryLight,
-      textStyle: const TextStyle(
-        fontWeight: FontWeight.w600,
-        fontSize: 10,
-      ),
-    );
-  }
-
-  Widget _buildCenterButton() {
-    return Container(
-      width: 56,
-      height: 56,
-      decoration: BoxDecoration(
-        gradient: AppColors.primaryGradient,
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.35),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
-          ),
-        ],
-        border: Border.all(color: Colors.white, width: 3),
-      ),
-      child: const Center(
-        child: FaIcon(
-          FontAwesomeIcons.play,
-          color: Colors.white,
-          size: 20,
-        ),
+      icon: FaIcon(icon, size: 18.sp),
+      inactiveIcon: FaIcon(icon, size: 18.sp),
+      activeColorPrimary: Colors.white,
+      activeColorSecondary: Colors.white,
+      inactiveColorPrimary: Colors.white54,
+      textStyle: TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: 10.sp,
       ),
     );
   }
@@ -162,9 +132,8 @@ class _StudentDashboardState extends State<StudentDashboard> {
           screens: _screens,
           items: _navBarItems(),
           confineToSafeArea: true,
-          backgroundColor: const Color(
-              0xFF0F172A), // Reverting to a dark background for the nav bar area
-          navBarHeight: kBottomNavigationBarHeight,
+          backgroundColor: const Color(0xFF020617),
+          navBarHeight: 70.h,
           handleAndroidBackButtonPress: false,
           resizeToAvoidBottomInset: true,
           stateManagement: true,
@@ -172,26 +141,30 @@ class _StudentDashboardState extends State<StudentDashboard> {
           popBehaviorOnSelectedNavBarItemPress: PopBehavior.all,
           animationSettings: const NavBarAnimationSettings(
             navBarItemAnimation: ItemAnimationSettings(
-              duration: Duration(milliseconds: 200),
-              curve: Curves.easeInOut,
+              duration: Duration(milliseconds: 300),
+              curve: Curves.easeOutCubic,
             ),
             screenTransitionAnimation: ScreenTransitionAnimationSettings(
               animateTabTransition: true,
-              duration: Duration(milliseconds: 200),
-              curve: Curves.easeInOut,
+              duration: Duration(milliseconds: 300),
+              curve: Curves.easeOutCubic,
             ),
           ),
-          decoration: const NavBarDecoration(
-            colorBehindNavBar: Color(0xFF0F172A),
+          decoration: NavBarDecoration(
+            colorBehindNavBar: const Color(0xFF020617),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30.r),
+              topRight: Radius.circular(30.r),
+            ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black12,
-                blurRadius: 10,
-                offset: Offset(0, -2),
+                color: Colors.black.withOpacity(0.5),
+                blurRadius: 20,
+                offset: const Offset(0, -5),
               ),
             ],
           ),
-          navBarStyle: NavBarStyle.style15,
+          navBarStyle: NavBarStyle.style1,
         ),
       ),
     );
@@ -200,11 +173,11 @@ class _StudentDashboardState extends State<StudentDashboard> {
   String _getPageTitle(int index) {
     switch (index) {
       case 1:
-        return 'My Courses';
+        return 'Ask Your Doubt';
       case 2:
-        return 'Online Tests';
+        return 'Daily MCQ';
       case 3:
-        return 'Transaction';
+        return 'Live Classes';
       case 4:
         return 'Profile';
       default:

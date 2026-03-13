@@ -1,705 +1,567 @@
 import 'package:flutter/material.dart';
-import 'dart:ui';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
-import 'package:vlm_academy/ui/shared/notifications_screen.dart';
+import 'dart:ui';
+
+import '../../core/constants/app_images.dart';
+import '../../core/routes/app_routes.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
-import 'course_list_screen/popular_course_list.dart';
-import 'chat/inbox_screen.dart';
-import 'daily_mcq_screen.dart';
+import '../shared/background_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.asset(
-              'assets/images/bgimage.png',
-              fit: BoxFit.cover,
-            ),
-          ),
-          SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildTopStatusRow(),
-                  const SizedBox(height: 20),
-                  _buildHeader(context),
-                  const SizedBox(height: 20),
-                  _buildSearchBar(),
-                  const SizedBox(height: 25),
-                  _buildDailyRewardsCard(context),
-                  const SizedBox(height: 25),
-                  _buildSectionHeader("Popular Courses", onSeeAll: () {
-                    PersistentNavBarNavigator.pushNewScreen(
-                      context,
-                      screen: const PopularCoursesScreen(),
-                      withNavBar: false, // OPTIONAL VALUE. True by default.
-                      pageTransitionAnimation:
-                          PageTransitionAnimation.cupertino,
-                    );
-                  }),
-                  const SizedBox(height: 15),
-                  _buildCategoryPills(),
-                  const SizedBox(height: 15),
-                  _buildPopularCoursesList(),
-                  const SizedBox(height: 25),
-                  _buildSectionHeader("Ask a Teacher Instantly",
-                      onSeeAll: () {}),
-                  const SizedBox(height: 15),
-                  _buildTeachersList(),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTopStatusRow() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      physics: const BouncingScrollPhysics(),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          _buildStatusBadge(
-            icon: FontAwesomeIcons.bolt,
-            color: Colors.amber,
-            label: "Class 12",
-          ),
-          const SizedBox(width: 8),
-          _buildStatusBadge(
-            icon: FontAwesomeIcons.solidStar,
-            color: AppColors.primary,
-            label: "1,245 XP",
-          ),
-          const SizedBox(width: 8),
-          _buildStatusBadge(
-            icon: FontAwesomeIcons.solidGem,
-            color: Colors.cyan,
-            label: "42 Gems",
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatusBadge({
-    required IconData icon,
-    required Color color,
-    required String label,
-  }) {
-    return _buildGlassContainer(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      borderRadius: BorderRadius.circular(20),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          FaIcon(icon, size: 12, color: color),
-          const SizedBox(width: 6),
-          Text(
-            label,
-            style: AppTextStyles.labelSmall.copyWith(
-              color: AppColors.textPrimaryDark,
-              fontSize: 10,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildGlassContainer({
-    required Widget child,
-    required BorderRadius borderRadius,
-    EdgeInsetsGeometry? padding,
-    double blur = 10.0,
-    double opacity = 0.1,
-  }) {
-    return ClipRRect(
-      borderRadius: borderRadius,
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-        child: Container(
-          padding: padding,
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(opacity),
-            borderRadius: borderRadius,
-            border: Border.all(
-              width: 1.5,
-              color: Colors.white.withOpacity(0.2),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: child,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeader(BuildContext context) {
-    return Row(
-      children: [
-        Stack(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(3),
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: AppColors.primaryGradient,
-              ),
-              child: const CircleAvatar(
-                radius: 30,
-                backgroundImage:
-                    NetworkImage('https://i.pravatar.cc/150?u=harsha'),
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: Container(
-                padding: const EdgeInsets.all(4),
-                decoration: const BoxDecoration(
-                  color: Colors.amber,
-                  shape: BoxShape.circle,
-                ),
-                child: const Text(
-                  "Lvl 5",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 8,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(width: 15),
-        Expanded(
+    return BackgroundScreen(
+      useSafeArea: false,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              _buildBrandedHeader(),
+              SizedBox(height: 24.h),
+              _buildGreetingSection(),
+              SizedBox(height: 24.h),
+              _buildActivityGrid(context),
+              SizedBox(height: 24.h),
               Row(
                 children: [
-                  Text(
-                    "Welcome Back,",
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.labelSmall.copyWith(
-                      color: AppColors.textPrimaryDark,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  Expanded(child: _buildSpinWinCard()),
+                  SizedBox(width: 16.w),
+                  Expanded(child: _buildLiveClassCard()),
                 ],
               ),
-              Text(
-                "Harsha!",
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.labelSmall.copyWith(
-                  color: AppColors.textPrimaryDark,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: const LinearProgressIndicator(
-                        value: 0.8,
-                        backgroundColor: AppColors.surfaceDark,
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(AppColors.primary),
-                        minHeight: 6,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    "320 / 400 VLM Points",
-                    style: AppTextStyles.caption.copyWith(
-                      color: AppColors.textSecondaryDark,
-                      fontSize: 10,
-                    ),
-                  ),
-                ],
-              ),
+              SizedBox(height: 24.h),
+              _buildFeedSection('SHORT LIVE SESSIONS', true),
+              SizedBox(height: 24.h),
+              _buildFeedSection('SHORT VIDEO FEED', false),
+              SizedBox(height: 40.h),
+              _buildSecondActivityGrid(),
             ],
           ),
-        ),
-        const SizedBox(width: 15),
-        InkWell(
-          onTap: () {
-            Navigator.of(context, rootNavigator: true).push(
-              MaterialPageRoute(builder: (context) => const InboxScreen()),
-            );
-          },
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: AppColors.surfaceDark,
-              shape: BoxShape.circle,
-              border: Border.all(
-                  color: AppColors.borderDark.withValues(alpha: 0.5)),
-            ),
-            child: const FaIcon(
-              FontAwesomeIcons.solidCommentDots,
-              color: AppColors.primary,
-              size: 20,
-            ),
-          ),
-        ),
-        const SizedBox(width: 10),
-        InkWell(
-          onTap: () {
-            Navigator.of(context, rootNavigator: true).push(
-              MaterialPageRoute(
-                  builder: (context) => const NotificationsScreen()),
-            );
-          },
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: AppColors.surfaceDark,
-              shape: BoxShape.circle,
-              border: Border.all(
-                  color: AppColors.borderDark.withValues(alpha: 0.5)),
-            ),
-            child: const Badge(
-              child: FaIcon(
-                FontAwesomeIcons.solidBell,
-                color: AppColors.primary,
-                size: 20,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSearchBar() {
-    return Row(
-      children: [
-        Expanded(
-          child: _buildGlassContainer(
-            borderRadius: BorderRadius.circular(15),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Row(
-              children: [
-                const FaIcon(
-                  FontAwesomeIcons.magnifyingGlass,
-                  color: Colors.white54,
-                  size: 18,
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  "Search for..",
-                  style:
-                      AppTextStyles.bodyMedium.copyWith(color: Colors.white54),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            gradient: AppColors.primaryGradient,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.primary.withOpacity(0.3),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: const FaIcon(
-            FontAwesomeIcons.sliders,
-            color: Colors.white,
-            size: 20,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDailyRewardsCard(BuildContext context) {
-    return _buildGlassContainer(
-      borderRadius: BorderRadius.circular(20),
-      opacity:
-          0.2, // Slightly more opaque for better contrast with the blue gradient
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          gradient: LinearGradient(
-            colors: [
-              Colors.blue.shade600.withOpacity(0.6),
-              Colors.cyan.shade400.withOpacity(0.6),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    "Daily Rewards Section",
-                    style: AppTextStyles.h4.copyWith(color: Colors.white),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.black26,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Row(
-                    children: [
-                      FaIcon(FontAwesomeIcons.hourglassHalf,
-                          color: Colors.orange, size: 12),
-                      SizedBox(width: 5),
-                      Text(
-                        "2h 14m left",
-                        style: TextStyle(color: Colors.white, fontSize: 10),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Text(
-              "Solve 5 MCQ today and win\n50 VLM Points",
-              style: AppTextStyles.bodyMedium.copyWith(color: Colors.white70),
-            ),
-            const SizedBox(height: 15),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context, rootNavigator: true).push(
-                  MaterialPageRoute(
-                      builder: (context) => const DailyMcqScreen()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.amber,
-                foregroundColor: Colors.black,
-                elevation: 4,
-                shadowColor: Colors.amber.withOpacity(0.5),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              ),
-              child: const Text("Start Quest",
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-            ),
-            const SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                    width: 6,
-                    height: 6,
-                    decoration: const BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.white38)),
-                const SizedBox(width: 4),
-                Container(
-                    width: 12,
-                    height: 6,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(3),
-                        color: Colors.white)),
-                const SizedBox(width: 4),
-                Container(
-                    width: 6,
-                    height: 6,
-                    decoration: const BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.white38)),
-              ],
-            ),
-          ],
         ),
       ),
     );
   }
 
-  Widget _buildSectionHeader(String title, {required VoidCallback onSeeAll}) {
+  // 1. Branded Header
+  Widget _buildBrandedHeader() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          title,
-          style: AppTextStyles.h5.copyWith(color: AppColors.textPrimaryDark),
+        IconButton(
+          onPressed: () {},
+          icon: Icon(Icons.school_outlined, color: Colors.white, size: 28.sp),
         ),
-        TextButton(
-          onPressed: onSeeAll,
-          child: Row(
-            children: [
-              Text(
-                "SEE ALL",
-                style: AppTextStyles.buttonSmall.copyWith(
-                  color: AppColors.textSecondaryDark,
-                  fontSize: 10,
+        Image.asset(
+          AppImages.vlmLogo,
+          width: 80.w,
+          fit: BoxFit.contain,
+        ),
+        Stack(
+          children: [
+            IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.notifications_none_outlined,
+                  color: Colors.white, size: 28.sp),
+            ),
+            Positioned(
+              top: 12.h,
+              right: 12.w,
+              child: Container(
+                width: 8.w,
+                height: 8.w,
+                decoration: const BoxDecoration(
+                  color: Colors.redAccent,
+                  shape: BoxShape.circle,
                 ),
               ),
-              const Icon(Icons.chevron_right,
-                  size: 16, color: AppColors.textSecondaryDark),
-            ],
-          ),
+            ),
+          ],
         ),
       ],
     );
   }
 
-  Widget _buildCategoryPills() {
-    final categories = ["All", "Physics", "Chemistry", "Arts"];
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: categories.map((cat) {
-          final isSelected = cat == "Physics";
-          if (isSelected) {
-            return Container(
-              margin: const EdgeInsets.only(right: 12),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-              decoration: BoxDecoration(
-                gradient: AppColors.primaryGradient,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.primary.withOpacity(0.3),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Text(
-                cat,
-                style: AppTextStyles.labelMedium.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            );
-          }
-          return Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: _buildGlassContainer(
-              borderRadius: BorderRadius.circular(12),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-              child: Text(
-                cat,
-                style: AppTextStyles.labelMedium.copyWith(
-                  color: Colors.white70,
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
-            ),
-          );
-        }).toList(),
+  // 2. Greeting Section
+  Widget _buildGreetingSection() {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(color: Colors.white.withOpacity(0.1)),
       ),
-    );
-  }
-
-  Widget _buildPopularCoursesList() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          _buildCourseCard(
-            title: "Thermodynamics",
-            tag: "Heat Mastery Arena",
-            reward: "120 VLM Points",
-            coins: "850 XP",
-            players: "7,030",
-            imageUrl:
-                "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=500&q=80",
-          ),
-          const SizedBox(width: 15),
-          _buildCourseCard(
-            title: "Chemical Bonds",
-            tag: "Chemistry",
-            reward: "100 VLM Points",
-            coins: "450 XP",
-            players: "3,120",
-            imageUrl:
-                "https://images.unsplash.com/photo-1576086213369-97a306d36557?w=500&q=80",
+          Text(
+            'Hi Aryan 👋',
+            style: AppTextStyles.h5.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.5,
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildCourseCard({
-    required String title,
-    required String tag,
-    required String reward,
-    required String coins,
-    required String players,
-    required String imageUrl,
-  }) {
-    return _buildGlassContainer(
-      borderRadius: BorderRadius.circular(25),
-      child: Container(
-        width: 240,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25),
+  // 3. Activity Grid
+  Widget _buildActivityGrid(BuildContext context) {
+    return GridView.count(
+      crossAxisCount: 3,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      mainAxisSpacing: 8.h,
+      crossAxisSpacing: 8.w,
+      childAspectRatio: 0.7,
+      children: [
+        GestureDetector(
+          onTap: () => Navigator.of(context, rootNavigator: true)
+              .pushNamed(AppRoutes.askDoubt),
+          child: _buildGridItem(
+            label: 'ASK DOUBT',
+            icon: FontAwesomeIcons.circleNodes,
+            color: const Color(0xFF60A5FA),
+          ),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(25)),
-              child: Stack(
+        _buildGridItem(
+          label: 'AI TUTOR',
+          icon: FontAwesomeIcons.brain,
+          color: const Color(0xFF818CF8),
+        ),
+        _buildGridItem(
+          label: 'LIVE TEACHER',
+          icon: Icons.person_pin_outlined,
+          color: const Color(0xFFFACC15),
+          hasBadge: true,
+        ),
+        _buildGridItem(
+          label: 'DAILY MCQ TASK',
+          icon: FontAwesomeIcons.comments,
+          color: const Color(0xFF2DD4BF),
+          subtitle: 'Completed: 3/5',
+          hasProgress: true,
+        ),
+        _buildGridItem(
+          label: 'LEADERBOARD',
+          icon: FontAwesomeIcons.trophy,
+          color: const Color(0xFFF472B6),
+          subtitle: 'Your Rank: #12',
+          trend: '+3 Positions',
+        ),
+        _buildGridItem(
+          label: 'REWARD POINTS',
+          icon: FontAwesomeIcons.coins,
+          color: const Color(0xFFFB923C),
+          subtitle: 'Total: 1250 pts',
+        ),
+      ],
+    );
+  }
+
+  // 3. Activity Grid
+  Widget _buildSecondActivityGrid() {
+    return GridView.count(
+      crossAxisCount: 3,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      mainAxisSpacing: 16.h,
+      crossAxisSpacing: 16.w,
+      childAspectRatio: 0.73,
+      children: [
+        _buildGridItem(
+          label: 'HISTORY',
+          icon: Icons.history,
+          color: const Color(0xFF94A3B8),
+        ),
+        _buildGridItem(
+          label: 'FAVORITES',
+          icon: Icons.favorite_border,
+          color: const Color(0xFFF87171),
+        ),
+        _buildGridItem(
+          label: 'SETTINGS',
+          icon: Icons.settings_outlined,
+          color: const Color(0xFF94A3B8),
+        ),
+        _buildGridItem(
+          label: 'SUPPORT',
+          icon: Icons.support_agent,
+          color: const Color(0xFF4ADE80),
+        ),
+        _buildGridItem(
+          label: 'PARENT MODE',
+          icon: Icons.family_restroom,
+          color: const Color(0xFFA78BFA),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGridItem({
+    required String label,
+    required IconData icon,
+    required Color color,
+    String? subtitle,
+    String? trend,
+    bool hasBadge = false,
+    bool hasProgress = false,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(24.r),
+        border: Border.all(color: color.withOpacity(0.3), width: 1.w),
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.1),
+            blurRadius: 10,
+            spreadRadius: 1,
+          )
+        ],
+      ),
+      child: Stack(
+        children: [
+          if (hasBadge)
+            Positioned(
+              top: 8.h,
+              right: 8.w,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                decoration: BoxDecoration(
+                  color: Colors.white24,
+                  borderRadius: BorderRadius.circular(4.r),
+                ),
+                child: Text('NEW',
+                    style: TextStyle(color: Colors.white, fontSize: 8.sp)),
+              ),
+            ),
+          Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
                 children: [
-                  Image.network(
-                    imageUrl,
-                    height: 140,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
+                  FaIcon(icon, color: color, size: 40.sp),
+                  SizedBox(height: 12.h),
+                  Text(
+                    label,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14.5.sp,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.3,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  Positioned(
-                    top: 15,
-                    left: 15,
-                    child: _buildGlassContainer(
-                      borderRadius: BorderRadius.circular(10),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 6),
-                      opacity: 0.3,
-                      child: Text(
-                        tag,
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold),
+                  if (subtitle != null) ...[
+                    SizedBox(height: 6.h),
+                    Text(
+                      subtitle,
+                      style: TextStyle(color: Colors.white54, fontSize: 8.5.sp),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                  if (hasProgress) ...[
+                    SizedBox(height: 8.h),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(2.r),
+                      child: LinearProgressIndicator(
+                        value: 3 / 5,
+                        backgroundColor: Colors.white10,
+                        valueColor: AlwaysStoppedAnimation<Color>(color),
+                        minHeight: 4.h,
                       ),
                     ),
-                  ),
+                  ],
+                  if (trend != null) ...[
+                    SizedBox(height: 4.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.arrow_upward,
+                            color: Colors.greenAccent, size: 10.sp),
+                        Text(
+                          trend,
+                          style: TextStyle(
+                              color: Colors.greenAccent, fontSize: 9.sp),
+                        ),
+                      ],
+                    ),
+                  ],
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(15),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Reward: $reward",
-                        style:
-                            const TextStyle(color: Colors.amber, fontSize: 10),
-                      ),
-                      const Icon(Icons.bookmark_border,
-                          color: Colors.white54, size: 20),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    "Mission: $title Trial",
-                    style: AppTextStyles.h6.copyWith(color: Colors.white),
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      const FaIcon(FontAwesomeIcons.circle,
-                          color: Colors.grey, size: 7),
-                      const SizedBox(width: 5),
-                      Text(
-                        coins,
-                        style: const TextStyle(
-                            color: Colors.white70, fontSize: 12),
-                      ),
-                      const SizedBox(width: 15),
-                      const FaIcon(FontAwesomeIcons.users,
-                          color: Colors.grey, size: 10),
-                      const SizedBox(width: 5),
-                      Text(
-                        "$players ",
-                        style: const TextStyle(
-                            color: Colors.white70, fontSize: 12),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildTeachersList() {
-    final teachers = [
-      {"name": "Jiya", "url": "https://i.pravatar.cc/150?u=jiya"},
-      {"name": "Aman", "url": "https://i.pravatar.cc/150?u=aman"},
-      {"name": "Rahul.J", "url": "https://i.pravatar.cc/150?u=rahulj"},
-      {"name": "Manav", "url": "https://i.pravatar.cc/150?u=manav"},
-    ];
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: teachers.map((t) {
-          return Padding(
-            padding: const EdgeInsets.only(right: 20),
-            child: Column(
+  // 4. Feature Cards (Spin & Live Class)
+  Widget _buildSpinWinCard() {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(24.r),
+        border: Border.all(color: Colors.white.withOpacity(0.1)),
+      ),
+      child: Column(
+        children: [
+          Text(
+            'SPIN & WIN TIMER',
+            style: TextStyle(
+                color: Colors.white70,
+                fontSize: 10.sp,
+                fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 4.h),
+          Text(
+            'Next Spin in: 00:45:12',
+            style: TextStyle(color: Colors.white38, fontSize: 8.sp),
+          ),
+          SizedBox(height: 16.h),
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              SizedBox(
+                width: 60.w,
+                height: 60.w,
+                child: CircularProgressIndicator(
+                  value: 0.7,
+                  strokeWidth: 4.w,
+                  backgroundColor: Colors.white10,
+                  valueColor:
+                      const AlwaysStoppedAnimation<Color>(Color(0xFFFACC15)),
+                ),
+              ),
+              Icon(Icons.access_time_filled,
+                  color: Colors.yellow.withOpacity(0.5), size: 30.sp),
+            ],
+          ),
+          SizedBox(height: 16.h),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
+            decoration: BoxDecoration(
+              gradient: AppColors.secondaryGradient,
+              borderRadius: BorderRadius.circular(20.r),
+            ),
+            child: Text(
+              'SPIN NOW',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLiveClassCard() {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(24.r),
+        border: Border.all(color: Colors.white.withOpacity(0.1)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'UPCOMING LIVE CLASS',
+            style: TextStyle(
+                color: Colors.white70,
+                fontSize: 14.sp,
+                fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            'Topic: JEE Main: Organic Chemistry',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 11.sp,
+                fontWeight: FontWeight.w500),
+            maxLines: 2,
+          ),
+          SizedBox(height: 4.h),
+          Text(
+            'Time: 2:00 PM IST (Today)',
+            style: TextStyle(color: Colors.white38, fontSize: 8.sp),
+          ),
+          SizedBox(height: 12.h),
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 12.r,
+                backgroundColor: Colors.white10,
+                backgroundImage:
+                    const NetworkImage('https://i.pravatar.cc/150?u=doc'),
+              ),
+              SizedBox(width: 8.w),
+              Text('Dr. Sharma',
+                  style: TextStyle(color: Colors.white70, fontSize: 9.sp)),
+            ],
+          ),
+          SizedBox(height: 12.h),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(vertical: 6.h),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(20.r),
+              border: Border.all(color: Colors.white10),
+            ),
+            alignment: Alignment.center,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  padding: const EdgeInsets.all(3),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: AppColors.primary, width: 2),
-                  ),
-                  child: CircleAvatar(
-                    radius: 35,
-                    backgroundImage: NetworkImage(t["url"]!),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  t["name"]!,
-                  style: AppTextStyles.labelSmall
-                      .copyWith(color: AppColors.textPrimaryDark),
-                ),
+                Text('JOIN LIVE  ',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.bold)),
+                Text('00:45:12',
+                    style: TextStyle(color: Colors.white54, fontSize: 8.sp)),
               ],
             ),
-          );
-        }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 5. Feed Sections
+  Widget _buildFeedSection(String title, bool isLive) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(left: 4.w),
+          child: Text(
+            title,
+            style: TextStyle(
+              color: Colors.white70,
+              fontSize: 14.sp,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1,
+            ),
+          ),
+        ),
+        SizedBox(height: 16.h),
+        SizedBox(
+          height: 180.h,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: 5,
+            separatorBuilder: (context, index) => SizedBox(width: 16.w),
+            itemBuilder: (context, index) {
+              return _buildFeedItem(isLive);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFeedItem(bool isLive) {
+    return Container(
+      width: 150.w,
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(16.r),
+        image: DecorationImage(
+          image: NetworkImage(
+              'https://picsum.photos/200/300?sig=${DateTime.now().millisecondsSinceEpoch}'),
+          fit: BoxFit.cover,
+          colorFilter:
+              ColorFilter.mode(Colors.black.withOpacity(0.3), BlendMode.darken),
+        ),
+      ),
+      child: Stack(
+        children: [
+          if (isLive)
+            Positioned(
+              top: 8.h,
+              right: 8.w,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                decoration: BoxDecoration(
+                  color: Colors.redAccent,
+                  borderRadius: BorderRadius.circular(4.r),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                        width: 4.w,
+                        height: 4.w,
+                        decoration: const BoxDecoration(
+                            color: Colors.white, shape: BoxShape.circle)),
+                    SizedBox(width: 4.w),
+                    Text('LIVE',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 6.sp,
+                            fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              ),
+            ),
+          if (!isLive)
+            Center(
+              child: Container(
+                padding: EdgeInsets.all(4.w),
+                decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    shape: BoxShape.circle),
+                child: Icon(Icons.play_arrow, color: Colors.white, size: 24.sp),
+              ),
+            ),
+          Positioned(
+            bottom: 8.h,
+            left: 8.w,
+            right: 8.w,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '5 Min: Complex Numbers Trick',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 8.sp,
+                      fontWeight: FontWeight.bold),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                if (isLive) ...[
+                  SizedBox(height: 4.h),
+                  Row(
+                    children: [
+                      Icon(Icons.person, color: Colors.white70, size: 8.sp),
+                      SizedBox(width: 4.w),
+                      Text('Teacher',
+                          style:
+                              TextStyle(color: Colors.white70, fontSize: 6.sp)),
+                    ],
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

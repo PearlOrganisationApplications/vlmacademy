@@ -187,13 +187,14 @@ class ProfileReviewScreen extends StatelessWidget {
     return Container(
       width: 100.w,
       height: 100.w,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.5),
+            color: AppColors.primary,
             blurRadius: 30,
             spreadRadius: 1,
+            offset: Offset(0, 10),
           ),
         ],
       ),

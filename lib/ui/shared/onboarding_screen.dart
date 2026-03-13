@@ -6,6 +6,7 @@ import '../../core/constants/app_images.dart';
 import '../../core/routes/app_routes.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
+import '../shared/background_screen.dart';
 
 // ─── Data model ──────────────────────────────────────────────────────────────
 
@@ -99,14 +100,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   void _finish() {
     // TODO: persist onboarding-seen flag via SharedPreferences
-    Navigator.pushReplacementNamed(context, AppRoutes.login);
+    Navigator.pushReplacementNamed(context, AppRoutes.learningPlan);
   }
 
   // ─── Build ─────────────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BackgroundScreen(
+      useSafeArea: false,
       body: SafeArea(
         child: PageView(
           controller: _pageController,
@@ -177,7 +179,7 @@ class _SlidePage extends StatelessWidget {
               child: Text(
                 'Skip',
                 style: AppTextStyles.labelMedium.copyWith(
-                  color: AppColors.textSecondaryDark,
+                  color: Colors.white70,
                 ),
               ),
             ),
@@ -197,7 +199,7 @@ class _SlidePage extends StatelessWidget {
           Text(
             data.title,
             style: AppTextStyles.h3.copyWith(
-              color: AppColors.textPrimaryDark,
+              color: Colors.white,
             ),
             textAlign: TextAlign.center,
           ),
@@ -208,7 +210,7 @@ class _SlidePage extends StatelessWidget {
           Text(
             data.subtitle,
             style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.textSecondaryDark,
+              color: Colors.white70,
             ),
             textAlign: TextAlign.center,
           ),
@@ -282,7 +284,7 @@ class _Dot extends StatelessWidget {
       width: active ? 20.w : 8.w,
       height: 8.h,
       decoration: BoxDecoration(
-        color: active ? AppColors.primary : AppColors.surfaceDarkElevated,
+        color: active ? AppColors.primary : Colors.white12,
         borderRadius: BorderRadius.circular(4.r),
       ),
     );

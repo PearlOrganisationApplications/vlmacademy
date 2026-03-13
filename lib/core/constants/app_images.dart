@@ -10,6 +10,11 @@ class AppImages {
 
   // ─── Brand / Logo ───────────────────────────────────────────────────────────
   static const String vlmLogo = '$_imagesBase/vlm_logo.png'; // primary — PNG
+  static const String bgImage = '$_imagesBase/bgimage.png'; // background — PNG
+  static const String roleStudent = '$_imagesBase/role_student.png';
+  static const String roleParent = '$_imagesBase/role_parent.png';
+  static const String roleTeacher = '$_imagesBase/role_teacher.png';
+  static const String otpVerification = '$_imagesBase/otp_verification.png';
 
   // ─── Onboarding ─────────────────────────────────────────────────────────────
   static const String onboarding1 = '$_imagesBase/onboarding1.png';

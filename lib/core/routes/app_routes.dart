@@ -13,6 +13,10 @@ import '../../ui/student/profile_screen.dart';
 import '../../ui/teacher/teacher_dashboard.dart';
 import '../../ui/auth/teacher_onboarding_screen.dart';
 import '../../ui/auth/teacher_onboarding/profile_review_screen.dart';
+import '../../ui/auth/role_selection_screen.dart';
+import '../../ui/student/profile/student_profile_setup_screen.dart';
+import '../../ui/student/plans/learning_plan_screen.dart';
+import '../../ui/student/chat/ask_doubt_screen.dart';
 
 class AppRoutes {
   // Core routes
@@ -34,6 +38,9 @@ class AppRoutes {
   static const String studentTests = '/student/tests';
   static const String studentWallet = '/student/wallet';
   static const String studentProfile = '/student/profile';
+  static const String studentProfileSetup = '/student/profile-setup';
+  static const String learningPlan = '/student/learning-plan';
+  static const String askDoubt = '/student/ask-doubt';
 
   // Teacher routes
   static const String teacherDashboard = '/teacher/dashboard';
@@ -46,6 +53,9 @@ class AppRoutes {
 
       case onboarding:
         return MaterialPageRoute(builder: (_) => const OnboardingScreen());
+
+      case roleSelection:
+        return MaterialPageRoute(builder: (_) => const RoleSelectionScreen());
 
       case login:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
@@ -78,6 +88,16 @@ class AppRoutes {
 
       case studentProfile:
         return MaterialPageRoute(builder: (_) => const ProfileScreen());
+
+      case studentProfileSetup:
+        return MaterialPageRoute(
+            builder: (_) => const StudentProfileSetupScreen());
+
+      case learningPlan:
+        return MaterialPageRoute(builder: (_) => const LearningPlanScreen());
+
+      case askDoubt:
+        return MaterialPageRoute(builder: (_) => const AskDoubtScreen());
 
       case teacherDashboard:
         return MaterialPageRoute(builder: (_) => const TeacherDashboard());
