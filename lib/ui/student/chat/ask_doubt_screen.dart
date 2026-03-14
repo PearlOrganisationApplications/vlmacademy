@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
+import 'package:provider/provider.dart';
+import '../../../providers/chat_provider.dart';
 import 'package:vlm_academy/core/theme/app_colors.dart';
 
 import '../../../core/theme/app_text_styles.dart';
 import '../../shared/background_screen.dart';
+import 'ai_chat_screen.dart';
+import 'teacher_searching_screen.dart';
 
 class AskDoubtScreen extends StatefulWidget {
   const AskDoubtScreen({super.key});
@@ -386,7 +391,40 @@ class _AskDoubtScreenState extends State<AskDoubtScreen> {
         ],
       ),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          final question = _questionController.text;
+          if (_selectedSessionIndex == 0) {
+            if (question.isNotEmpty) {
+              context.read<ChatProvider>().sendMessage(
+                    question,
+                    userName: 'Aryan', // Hardcoded for now, ideally from AuthProvider
+                  );
+            }
+            PersistentNavBarNavigator.pushNewScreen(
+              context,
+              screen: const AiChatScreen(),
+              withNavBar: false,
+              pageTransitionAnimation: PageTransitionAnimation.cupertino,
+            );
+          } else if (_selectedSessionIndex == 1) {
+            if (question.isNotEmpty) {
+              context.read<ChatProvider>().sendMessage(
+                    question,
+                    userName: 'Aryan',
+                  );
+            }
+            PersistentNavBarNavigator.pushNewScreen(
+              context,
+              screen: const TeacherSearchingScreen(),
+              withNavBar: false,
+              pageTransitionAnimation: PageTransitionAnimation.cupertino,
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('This session type is coming soon!')),
+            );
+          }
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,

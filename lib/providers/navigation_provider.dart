@@ -1,0 +1,21 @@
+import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
+
+class NavigationProvider with ChangeNotifier {
+  final PersistentTabController _controller = PersistentTabController(initialIndex: 0);
+
+  PersistentTabController get controller => _controller;
+
+  int get currentIndex => _controller.index;
+
+  void setIndex(int index) {
+    _controller.jumpToTab(index);
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+}

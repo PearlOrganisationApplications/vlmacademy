@@ -10,6 +10,8 @@ import 'providers/auth_provider.dart';
 import 'providers/learning_provider.dart';
 import 'providers/test_provider.dart';
 import 'providers/wallet_provider.dart';
+import 'providers/chat_provider.dart';
+import 'providers/navigation_provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,6 +45,8 @@ class VlmAcademyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (_) => LearningProvider()),
             ChangeNotifierProvider(create: (_) => WalletProvider()),
             ChangeNotifierProvider(create: (_) => TestProvider()),
+            ChangeNotifierProvider(create: (_) => ChatProvider()),
+            ChangeNotifierProvider(create: (_) => NavigationProvider()),
           ],
           child: MaterialApp(
             title: 'VLM Academy',

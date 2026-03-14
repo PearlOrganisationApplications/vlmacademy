@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
+import 'package:provider/provider.dart';
+import '../../providers/navigation_provider.dart';
 
-import '../widgets/custom_app_bar.dart';
 import 'home_screen.dart';
 import 'chat/ask_doubt_screen.dart';
 import 'daily_mcq_screen.dart';
@@ -18,16 +19,11 @@ class StudentDashboard extends StatefulWidget {
 }
 
 class _StudentDashboardState extends State<StudentDashboard> {
-  late final PersistentTabController _controller;
   late final List<Widget> _screens;
-
-  int _selectedIndex = 0;
 
   @override
   void initState() {
     super.initState();
-
-    _controller = PersistentTabController(initialIndex: 0);
 
     _screens = [
       const HomeScreen(),
@@ -36,22 +32,10 @@ class _StudentDashboardState extends State<StudentDashboard> {
       const TestsScreen(),
       const ProfileScreen(),
     ];
-
-    _controller.addListener(_handleTabChange);
-  }
-
-  void _handleTabChange() {
-    if (_selectedIndex != _controller.index) {
-      setState(() {
-        _selectedIndex = _controller.index;
-      });
-    }
   }
 
   @override
   void dispose() {
-    _controller.removeListener(_handleTabChange);
-    _controller.dispose();
     super.dispose();
   }
 
@@ -100,12 +84,15 @@ class _StudentDashboardState extends State<StudentDashboard> {
 
   @override
   Widget build(BuildContext context) {
+    final navProvider = context.watch<NavigationProvider>();
+    final selectedIndex = navProvider.currentIndex;
+
     return PopScope(
-      canPop: _selectedIndex == 0,
+      canPop: selectedIndex == 0,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
-        if (_selectedIndex != 0) {
-          _controller.jumpToTab(0);
+        if (selectedIndex != 0) {
+          navProvider.setIndex(0);
         }
       },
       child: Scaffold(
@@ -128,7 +115,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
         //       ),
         body: PersistentTabView(
           context,
-          controller: _controller,
+          controller: navProvider.controller,
           screens: _screens,
           items: _navBarItems(),
           confineToSafeArea: true,

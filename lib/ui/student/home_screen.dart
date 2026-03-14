@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:ui';
+import 'package:provider/provider.dart';
+import '../../providers/navigation_provider.dart';
 
 import '../../core/constants/app_images.dart';
-import '../../core/routes/app_routes.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../shared/background_screen.dart';
@@ -124,8 +125,7 @@ class HomeScreen extends StatelessWidget {
       childAspectRatio: 0.7,
       children: [
         GestureDetector(
-          onTap: () => Navigator.of(context, rootNavigator: true)
-              .pushNamed(AppRoutes.askDoubt),
+          onTap: () => context.read<NavigationProvider>().setIndex(1),
           child: _buildGridItem(
             label: 'ASK DOUBT',
             icon: FontAwesomeIcons.circleNodes,
