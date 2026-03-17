@@ -9,6 +9,7 @@ import '../../core/constants/app_images.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../shared/background_screen.dart';
+import 'chat/ai_chat_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -132,10 +133,18 @@ class HomeScreen extends StatelessWidget {
             color: const Color(0xFF60A5FA),
           ),
         ),
-        _buildGridItem(
-          label: 'AI TUTOR',
-          icon: FontAwesomeIcons.brain,
-          color: const Color(0xFF818CF8),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const AiChatScreen()),
+            );
+          },
+          child: _buildGridItem(
+            label: 'AI TUTOR',
+            icon: FontAwesomeIcons.brain,
+            color: const Color(0xFF818CF8),
+          ),
         ),
         _buildGridItem(
           label: 'LIVE TEACHER',
@@ -143,12 +152,15 @@ class HomeScreen extends StatelessWidget {
           color: const Color(0xFFFACC15),
           hasBadge: true,
         ),
-        _buildGridItem(
-          label: 'DAILY MCQ TASK',
-          icon: FontAwesomeIcons.comments,
-          color: const Color(0xFF2DD4BF),
-          subtitle: 'Completed: 3/5',
-          hasProgress: true,
+        GestureDetector(
+          onTap: () => context.read<NavigationProvider>().setIndex(2),
+          child: _buildGridItem(
+            label: 'DAILY MCQ TASK',
+            icon: FontAwesomeIcons.comments,
+            color: const Color(0xFF2DD4BF),
+            subtitle: 'Completed: 3/5',
+            hasProgress: true,
+          ),
         ),
         _buildGridItem(
           label: 'LEADERBOARD',

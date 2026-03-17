@@ -4,6 +4,7 @@ import '../../../core/theme/app_text_styles.dart';
 import '../../../core/constants/app_images.dart';
 import '../../shared/background_screen.dart';
 import 'dart:ui';
+import 'session_feedback_screen.dart';
 import 'package:provider/provider.dart';
 import '../../../providers/chat_provider.dart';
 import '../../../data/models/chat_message.dart';
@@ -105,6 +106,30 @@ class _AiChatScreenState extends State<AiChatScreen> {
           IconButton(
             onPressed: () => Navigator.pop(context),
             icon: const Icon(Icons.arrow_back, color: Colors.white),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const SessionFeedbackScreen()),
+              );
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+              decoration: BoxDecoration(
+                color: Colors.redAccent.withOpacity(0.8),
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              child: Text(
+                'END SESSION',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           ),
           Image.asset(AppImages.vlmLogo, height: 40.h),
           Container(

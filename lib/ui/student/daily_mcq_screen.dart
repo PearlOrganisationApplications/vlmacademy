@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:vlm_academy/core/theme/app_colors.dart';
+import '../../core/theme/app_text_styles.dart';
+import '../shared/background_screen.dart';
+import 'mcq_quiz_screen.dart';
+import 'dart:ui';
 
 class DailyMcqScreen extends StatefulWidget {
   const DailyMcqScreen({super.key});
@@ -9,428 +15,328 @@ class DailyMcqScreen extends StatefulWidget {
 }
 
 class _DailyMcqScreenState extends State<DailyMcqScreen> {
-  final List<Map<String, dynamic>> _questions = [
-    {
-      'topic': 'Geography',
-      'question': 'What is the capital of India?',
-      'options': {
-        'A': 'Dehradun',
-        'B': 'Mumbai',
-        'C': 'Delhi',
-        'D': 'Hyderabad'
-      },
-      'correct': 'C'
-    },
-    {
-      'topic': 'Science',
-      'question': 'What is the chemical symbol for Water?',
-      'options': {'A': 'CO2', 'B': 'H2O', 'C': 'NaCl', 'D': 'O2'},
-      'correct': 'B'
-    },
-    {
-      'topic': 'History',
-      'question': 'Who was the first Prime Minister of India?',
-      'options': {
-        'A': 'B.R. Ambedkar',
-        'B': 'Mahatma Gandhi',
-        'C': 'J. Nehru',
-        'D': 'S. Patel'
-      },
-      'correct': 'C'
-    },
-    {
-      'topic': 'Math',
-      'question': 'What is the square root of 144?',
-      'options': {'A': '10', 'B': '12', 'C': '14', 'D': '16'},
-      'correct': 'B'
-    },
-    {
-      'topic': 'Biology',
-      'question': 'Which organ pumps blood in the human body?',
-      'options': {'A': 'Lungs', 'B': 'Brain', 'C': 'Heart', 'D': 'Liver'},
-      'correct': 'C'
-    },
-  ];
-
-  int _currentIndex = 0;
-  int _score = 0;
-  bool _isFinished = false;
-  int _secondsLeft = 25;
-  Timer? _timer;
-  String? _selectedOption;
-  bool _isAnswered = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _startTimer();
-  }
-
-  void _startTimer() {
-    _timer?.cancel();
-    _secondsLeft = 25;
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_secondsLeft > 0) {
-        setState(() => _secondsLeft--);
-      } else {
-        _timer?.cancel();
-        _nextQuestion();
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
-
-  void _handleOptionSelect(String option) {
-    if (_isAnswered || _isFinished) return;
-    _timer?.cancel();
-
-    setState(() {
-      _selectedOption = option;
-      _isAnswered = true;
-      if (option == _questions[_currentIndex]['correct']) {
-        _score++;
-      }
-    });
-
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) _nextQuestion();
-    });
-  }
-
-  void _nextQuestion() {
-    if (_currentIndex < _questions.length - 1) {
-      setState(() {
-        _currentIndex++;
-        _selectedOption = null;
-        _isAnswered = false;
-        _startTimer();
-      });
-    } else {
-      setState(() => _isFinished = true);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    const Color bgColor = Color(0xFF030712);
-    const Color accentBlue = Color(0xFF3B82F6);
-    const Color surfaceColor = Color(0xFF0F172A);
-
-    if (_isFinished) return _buildResults(context, bgColor, accentBlue);
-
-    final currentQuestion = _questions[_currentIndex];
-    final options = currentQuestion['options'] as Map<String, String>;
-
-    return Scaffold(
-      backgroundColor: bgColor,
-      appBar: AppBar(
-        backgroundColor: bgColor,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded,
-              color: Colors.white, size: 20),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text('MCQ Challenge',
-            style: TextStyle(color: Colors.white70, fontSize: 16)),
-        centerTitle: true,
-      ),
+    return BackgroundScreen(
+      useSafeArea: false,
+      backgroundColor: const Color(0xFF020617), // Deep dark fallback
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Column(
-          children: [
-            // Top Status Bar - Pillar Styles
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildStatusPill(
-                  Icons.local_fire_department,
-                  '6 Day Streak',
-                  const Color(0xFF3B82F6).withOpacity(0.8),
-                  Colors.orange,
-                ),
-                _buildStatusPill(
-                  Icons.stars,
-                  '1,250 Coins',
-                  const Color(0xFF06B6D4).withOpacity(0.8),
-                  Colors.amber,
-                ),
-              ],
-            ),
-            const SizedBox(height: 30),
-
-            // Main Unified Challenge Card
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    accentBlue.withOpacity(0.9),
-                    const Color(0xFF0F172A),
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(30),
-                border: Border.all(color: Colors.white10.withOpacity(0.1)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.3),
-                    blurRadius: 20,
-                    offset: const Offset(0, 10),
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  // Header section
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 40),
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30),
+        child: SafeArea(
+            child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                child: Column(children: [
+                  SizedBox(height: 20.h),
+                  _buildHeader(),
+                  SizedBox(height: 40.h),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20.r),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                      child: Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.only(top: 24.w),
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(20.r),
+                          border: Border.all(color: AppColors.borderLight),
+                        ),
+                        child: Column(
+                          children: [
+                            _buildTitleSection(),
+                            SizedBox(height: 30.h),
+                            _buildInfoCards(),
+                            SizedBox(height: 30.h),
+                            _buildMainChallengeCard(),
+                          ],
+                        ),
                       ),
                     ),
-                    child: Column(
-                      children: [
-                        const Text(
-                          'Daily MCQ Challenge',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          currentQuestion['topic'],
-                          style: const TextStyle(
-                              color: Colors.white70, fontSize: 14),
-                        ),
-                        const SizedBox(height: 30),
-                        // Timer Circle
-                        Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            SizedBox(
-                              width: 100,
-                              height: 100,
-                              child: CircularProgressIndicator(
-                                value: _secondsLeft / 25,
-                                strokeWidth: 8,
-                                backgroundColor: Colors.white24,
-                                valueColor: const AlwaysStoppedAnimation<Color>(
-                                    Colors.white),
-                              ),
-                            ),
-                            Text(
-                              '00:${_secondsLeft.toString().padLeft(2, '0')}s',
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
                   ),
-
-                  // Question section
-                  Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 10),
-                        Text(
-                          currentQuestion['question'],
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600),
-                        ),
-                        const SizedBox(height: 30),
-
-                        // Options Grid
-                        GridView.count(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          crossAxisCount: 2,
-                          childAspectRatio: 2.2,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
-                          children: options.entries.map((entry) {
-                            return _buildOption(entry.key, entry.value);
-                          }).toList(),
-                        ),
-                        const SizedBox(height: 40),
-
-                        // Progress Section
-                        Column(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: LinearProgressIndicator(
-                                value: (_currentIndex + 1) / _questions.length,
-                                minHeight: 8,
-                                backgroundColor: surfaceColor,
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(accentBlue),
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              'Question ${_currentIndex + 1}/${_questions.length}',
-                              style: const TextStyle(
-                                  color: Colors.white54, fontSize: 12),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 40),
-          ],
-        ),
+                  SizedBox(height: 30.h),
+                  _buildStartButton(),
+                  SizedBox(height: 30.h),
+                ]))),
       ),
     );
   }
 
-  Widget _buildResults(
-      BuildContext context, Color bgColor, Color primaryColor) {
-    return Scaffold(
-      backgroundColor: bgColor,
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(30),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.stars_rounded, color: Colors.amber, size: 100),
-              const SizedBox(height: 20),
-              const Text(
-                'Challenge Completed!',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                'You scored $_score out of ${_questions.length}',
-                style: const TextStyle(color: Colors.white70, fontSize: 18),
-              ),
-              const SizedBox(height: 40),
-              ElevatedButton(
-                onPressed: () => Navigator.pop(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: primaryColor,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                ),
-                child: const Text('Back to Home',
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold)),
-              ),
-            ],
-          ),
-        ),
-      ),
+  Widget _buildHeader() {
+    final bool canPop = Navigator.canPop(context);
+    return Row(
+      children: [
+        if (canPop)
+          IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+          )
+        else
+          SizedBox(width: 48.w), // Spacer to balance header when no back button
+        const Spacer(),
+      ],
     );
   }
 
-  Widget _buildStatusPill(
-      IconData icon, String text, Color bgColor, Color iconColor) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(25),
-        boxShadow: [
-          BoxShadow(
-            color: bgColor.withOpacity(0.3),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Icon(icon, color: iconColor, size: 16),
-          const SizedBox(width: 6),
-          Text(
-            text,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildOption(String code, String text) {
-    bool isSelected = _selectedOption == code;
-    bool isCorrect = code == _questions[_currentIndex]['correct'];
-
-    Color borderColor = Colors.white10;
-    Widget? icon;
-
-    if (_isAnswered) {
-      if (isCorrect) {
-        borderColor = Colors.greenAccent.withOpacity(0.5);
-        icon =
-            const Icon(Icons.check_circle, color: Colors.greenAccent, size: 16);
-      } else if (isSelected) {
-        borderColor = Colors.redAccent.withOpacity(0.5);
-        icon = const Icon(Icons.cancel, color: Colors.redAccent, size: 16);
-      }
-    } else if (isSelected) {
-      borderColor = Colors.blueAccent;
-    }
-
-    return GestureDetector(
-      onTap: () => _handleOptionSelect(code),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Colors.white.withOpacity(isSelected ? 0.15 : 0.08),
-              Colors.white.withOpacity(isSelected ? 0.05 : 0.02),
-            ],
-          ),
-          borderRadius: BorderRadius.circular(15),
-          border: Border.all(color: borderColor, width: 1.5),
-        ),
-        child: Row(
+  Widget _buildTitleSection() {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              '$code. $text',
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500),
+              "Today's 20 MCQ",
+              style: AppTextStyles.h1.copyWith(
+                color: Colors.white,
+                fontSize: 32.sp,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            const Spacer(),
-            if (icon != null) icon,
           ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "Challenge",
+              style: AppTextStyles.h1.copyWith(
+                color: Colors.white,
+                fontSize: 32.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(width: 8.w),
+            Icon(Icons.auto_awesome, color: Colors.cyanAccent, size: 28.sp),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildInfoCards() {
+    return Container(
+      padding: EdgeInsets.all(26.w),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.9),
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(24.r), topRight: Radius.circular(24.r)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _buildInfoItem(
+            icon: Icons.school,
+            iconBg: Colors.teal.shade700,
+            label: 'Class:',
+            value: '10th',
+          ),
+          Container(
+            height: 40.h,
+            width: 1.w,
+            color: Colors.grey.withValues(alpha: 0.3),
+          ),
+          _buildInfoItem(
+            icon: Icons.menu_book,
+            iconBg: Colors.indigo.shade800,
+            label: 'Subject:',
+            value: 'Mathematics\n& Science',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoItem({
+    required IconData icon,
+    required Color iconBg,
+    required String label,
+    required String value,
+  }) {
+    return Row(
+      children: [
+        Container(
+          padding: EdgeInsets.all(8.w),
+          decoration: BoxDecoration(
+            color: iconBg,
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          child: Icon(icon, color: Colors.white, size: 24.sp),
+        ),
+        SizedBox(width: 12.w),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              label,
+              style: TextStyle(color: Colors.grey.shade600, fontSize: 12.sp),
+            ),
+            Text(
+              value,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 14.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMainChallengeCard() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20.r),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(24.w),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(20.r),
+            border: Border.all(color: AppColors.borderLight),
+          ),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildTimerSection(),
+                  _buildRewardSection(),
+                ],
+              ),
+              SizedBox(height: 30.h),
+              Text(
+                'Boost your score and climb the\nleaderboard! 🏆',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTimerSection() {
+    return Column(
+      children: [
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            SizedBox(
+              width: 100.w,
+              height: 100.w,
+              child: CircularProgressIndicator(
+                value: 0.8,
+                strokeWidth: 8.w,
+                backgroundColor: Colors.white10,
+                valueColor:
+                    const AlwaysStoppedAnimation<Color>(Colors.cyanAccent),
+              ),
+            ),
+            Text(
+              '20:00',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 12.h),
+        Text(
+          'Time Left',
+          style: TextStyle(color: Colors.white70, fontSize: 14.sp),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRewardSection() {
+    return Column(
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildCoinStack(),
+          ],
+        ),
+        SizedBox(height: 8.h),
+        Text(
+          '250 PTS',
+          style: TextStyle(
+            color: Colors.orangeAccent,
+            fontSize: 28.sp,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          'Points Reward',
+          style: TextStyle(color: Colors.white70, fontSize: 14.sp),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCoinStack() {
+    return Stack(
+      children: [
+        Icon(FontAwesomeIcons.coins, color: Colors.orangeAccent, size: 50.sp),
+      ],
+    );
+  }
+
+  Widget _buildStartButton() {
+    return Container(
+      width: double.infinity,
+      height: 60.h,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF2DD4BF), Color(0xFF3B82F6)],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+        borderRadius: BorderRadius.circular(30.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.cyan.withValues(alpha: 0.3),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const McqQuizScreen()),
+            );
+          },
+          borderRadius: BorderRadius.circular(30.r),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Start Task',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1,
+                ),
+              ),
+              SizedBox(width: 8.w),
+              Icon(Icons.north_east, color: Colors.white, size: 20.sp),
+            ],
+          ),
         ),
       ),
     );

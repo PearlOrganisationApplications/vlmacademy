@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../shared/background_screen.dart';
 import 'dart:ui';
+import 'session_feedback_screen.dart';
 
 class ChatDetailScreen extends StatelessWidget {
   const ChatDetailScreen({super.key});
@@ -14,7 +15,7 @@ class ChatDetailScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            _buildTeacherHeader(),
+            _buildTeacherHeader(context),
             Expanded(
               child: ListView(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -45,14 +46,14 @@ class ChatDetailScreen extends StatelessWidget {
                 ],
               ),
             ),
-            _buildMessageInput(),
+            _buildMessageInput(context),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildTeacherHeader() {
+  Widget _buildTeacherHeader(BuildContext context) {
     return ClipRRect(
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
@@ -66,6 +67,11 @@ class ChatDetailScreen extends StatelessWidget {
           ),
           child: Row(
             children: [
+              IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+              ),
+              SizedBox(width: 5.w),
               Stack(
                 children: [
                   CircleAvatar(
@@ -232,7 +238,7 @@ class ChatDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMessageInput() {
+  Widget _buildMessageInput(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
       decoration: BoxDecoration(
@@ -270,24 +276,33 @@ class ChatDetailScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 15.w),
-              Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(12.w),
-                    decoration: BoxDecoration(
-                      color: Colors.red[50],
-                      shape: BoxShape.circle,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SessionFeedbackScreen()),
+                  );
+                },
+                child: Column(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(12.w),
+                      decoration: BoxDecoration(
+                        color: Colors.red[50],
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(Icons.close, color: Colors.red, size: 24.sp),
                     ),
-                    child: Icon(Icons.close, color: Colors.red, size: 24.sp),
-                  ),
-                  SizedBox(height: 4.h),
-                  Text('END\nSESSION',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 10.sp,
-                          fontWeight: FontWeight.bold)),
-                ],
+                    SizedBox(height: 4.h),
+                    Text('END\nSESSION',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.bold)),
+                  ],
+                ),
               ),
             ],
           ),
