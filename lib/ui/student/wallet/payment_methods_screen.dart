@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../data/models/course_model.dart';
-import '../../core/theme/app_colors.dart';
-import '../widgets/custom_text_field.dart';
+import '../../../data/models/course_model.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../widgets/custom_text_field.dart';
 
 class PaymentMethodsScreen extends StatefulWidget {
   final CourseModel course;

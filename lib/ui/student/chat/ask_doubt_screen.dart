@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:provider/provider.dart';
-import '../../../providers/chat_provider.dart';
-import 'package:vlm_academy/core/theme/app_colors.dart';
-
-import '../../../core/theme/app_text_styles.dart';
+import '../../../../providers/chat_provider.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_text_styles.dart';
 import '../../shared/background_screen.dart';
 import 'ai_chat_screen.dart';
 import 'teacher_searching_screen.dart';
@@ -128,11 +127,11 @@ class _AskDoubtScreenState extends State<AskDoubtScreen> {
       width: double.infinity,
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.95),
+        color: Colors.white.withValues(alpha: 0.95),
         borderRadius: BorderRadius.circular(24.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 10),
           )
@@ -203,7 +202,7 @@ class _AskDoubtScreenState extends State<AskDoubtScreen> {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: Text(
@@ -251,7 +250,7 @@ class _AskDoubtScreenState extends State<AskDoubtScreen> {
       decoration: BoxDecoration(
         color: const Color(0xFFF1F5F9),
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: Colors.black.withOpacity(0.05)),
+        border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
@@ -279,8 +278,10 @@ class _AskDoubtScreenState extends State<AskDoubtScreen> {
       height: 48.h,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24.r),
-        border: Border.all(color: Colors.cyan.withOpacity(0.5)),
-        color: isPrimary ? Colors.blue.withOpacity(0.05) : Colors.transparent,
+        border: Border.all(color: Colors.cyan.withValues(alpha: 0.5)),
+        color: isPrimary
+            ? Colors.blue.withValues(alpha: 0.05)
+            : Colors.transparent,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -325,7 +326,7 @@ class _AskDoubtScreenState extends State<AskDoubtScreen> {
                 boxShadow: [
                   if (isSelected)
                     BoxShadow(
-                      color: Colors.blue.withOpacity(0.2),
+                      color: Colors.blue.withValues(alpha: 0.2),
                       blurRadius: 10,
                       spreadRadius: 2,
                     )
@@ -339,7 +340,10 @@ class _AskDoubtScreenState extends State<AskDoubtScreen> {
                     height: 40.w,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [type['color'].withOpacity(0.7), type['color']],
+                        colors: [
+                          type['color'].withValues(alpha: 0.7),
+                          type['color']
+                        ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -384,7 +388,7 @@ class _AskDoubtScreenState extends State<AskDoubtScreen> {
         borderRadius: BorderRadius.circular(28.r),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF007BFF).withOpacity(0.3),
+            color: const Color(0xFF007BFF).withValues(alpha: 0.3),
             blurRadius: 15,
             offset: const Offset(0, 5),
           )
@@ -397,7 +401,8 @@ class _AskDoubtScreenState extends State<AskDoubtScreen> {
             if (question.isNotEmpty) {
               context.read<ChatProvider>().sendMessage(
                     question,
-                    userName: 'Aryan', // Hardcoded for now, ideally from AuthProvider
+                    userName:
+                        'Aryan', // Hardcoded for now, ideally from AuthProvider
                   );
             }
             PersistentNavBarNavigator.pushNewScreen(
@@ -421,7 +426,8 @@ class _AskDoubtScreenState extends State<AskDoubtScreen> {
             );
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('This session type is coming soon!')),
+              const SnackBar(
+                  content: Text('This session type is coming soon!')),
             );
           }
         },

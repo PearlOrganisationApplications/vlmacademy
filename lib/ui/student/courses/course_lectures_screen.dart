@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'video_player_screen.dart';
-import 'certificate_screen.dart';
+import '../profile/certificate_screen.dart';
+import '../../shared/background_screen.dart';
 
 class CourseLecturesScreen extends StatefulWidget {
   final Map<String, dynamic> course;

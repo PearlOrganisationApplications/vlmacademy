@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
-import '../../../core/theme/app_text_styles.dart';
+import '../../../../core/theme/app_text_styles.dart';
 import '../../shared/background_screen.dart';
 import 'chat_detail_screen.dart';
 import 'dart:async';
@@ -88,7 +88,9 @@ class _TeacherSearchingScreenState extends State<TeacherSearchingScreen>
             Expanded(
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 500),
-                child: _isSearching ? _buildAnimatedDiscovery() : _buildTeacherList(),
+                child: _isSearching
+                    ? _buildAnimatedDiscovery()
+                    : _buildTeacherList(),
               ),
             ),
             if (_isSearching) ...[
@@ -131,8 +133,8 @@ class _TeacherSearchingScreenState extends State<TeacherSearchingScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            _isSearching 
-                ? 'Finding the best teacher for your doubt...' 
+            _isSearching
+                ? 'Finding the best teacher for your doubt...'
                 : 'We found ${_foundTeachers.length} expert teachers ready to help!',
             style: AppTextStyles.h4.copyWith(
               color: Colors.white,
@@ -160,9 +162,9 @@ class _TeacherSearchingScreenState extends State<TeacherSearchingScreen>
     return Container(
       margin: EdgeInsets.only(bottom: 15.h),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.12),
+        color: Colors.white.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: Colors.white.withOpacity(0.15)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
       ),
       child: InkWell(
         onTap: () {
@@ -216,11 +218,15 @@ class _TeacherSearchingScreenState extends State<TeacherSearchingScreen>
                         ),
                         if (teacher['isPremium'])
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8.w, vertical: 4.h),
                             decoration: BoxDecoration(
-                              color: Colors.orangeAccent.withOpacity(0.15),
+                              color:
+                                  Colors.orangeAccent.withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(8.r),
-                              border: Border.all(color: Colors.orangeAccent.withOpacity(0.5)),
+                              border: Border.all(
+                                  color: Colors.orangeAccent
+                                      .withValues(alpha: 0.5)),
                             ),
                             child: Text(
                               'PREMIUM',
@@ -237,10 +243,12 @@ class _TeacherSearchingScreenState extends State<TeacherSearchingScreen>
                       children: [
                         Text(
                           '${teacher['rating']} Stars',
-                          style: TextStyle(color: Colors.white70, fontSize: 12.sp),
+                          style:
+                              TextStyle(color: Colors.white70, fontSize: 12.sp),
                         ),
                         SizedBox(width: 4.w),
-                        Icon(Icons.star, color: Colors.orangeAccent, size: 14.sp),
+                        Icon(Icons.star,
+                            color: Colors.orangeAccent, size: 14.sp),
                       ],
                     ),
                     Text(
@@ -277,7 +285,8 @@ class _TeacherSearchingScreenState extends State<TeacherSearchingScreen>
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: Colors.white.withOpacity(0.15 * (1 - _controller.value)),
+                      color: Colors.white
+                          .withOpacity(0.15 * (1 - _controller.value)),
                       width: 2,
                     ),
                   ),
@@ -285,7 +294,7 @@ class _TeacherSearchingScreenState extends State<TeacherSearchingScreen>
               },
             );
           }),
-          
+
           // Floating Teachers
           _buildFloatingTeacher(0, -100.h, -100.w, _teacherAvatars[0]),
           _buildFloatingTeacher(1, -100.h, 100.w, _teacherAvatars[1]),
@@ -300,7 +309,7 @@ class _TeacherSearchingScreenState extends State<TeacherSearchingScreen>
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.blue.withOpacity(0.3),
+                  color: Colors.blue.withValues(alpha: 0.3),
                   blurRadius: 20,
                   spreadRadius: 5,
                 ),
@@ -334,7 +343,7 @@ class _TeacherSearchingScreenState extends State<TeacherSearchingScreen>
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withValues(alpha: 1.0),
                 borderRadius: BorderRadius.circular(20.r),
               ),
               child: Text(
@@ -356,14 +365,16 @@ class _TeacherSearchingScreenState extends State<TeacherSearchingScreen>
         animation: _controller,
         builder: (context, child) {
           // Subtle hover animation
-          double offset = 5 * (index % 2 == 0 ? 1 : -1) * (1 - _controller.value);
+          double offset =
+              5 * (index % 2 == 0 ? 1 : -1) * (1 - _controller.value);
           return Transform.translate(
             offset: Offset(0, offset),
             child: Container(
               padding: EdgeInsets.all(2.w),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.white.withOpacity(0.5), width: 1.5),
+                border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.5), width: 1.5),
               ),
               child: CircleAvatar(
                 radius: 25.r,
@@ -381,17 +392,19 @@ class _TeacherSearchingScreenState extends State<TeacherSearchingScreen>
       margin: EdgeInsets.symmetric(horizontal: 30.w),
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withValues(alpha: 1.0),
         borderRadius: BorderRadius.circular(25.r),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: Colors.white.withValues(alpha: 1.0)),
       ),
       child: Column(
         children: [
-          _buildInfoRow(Icons.science_outlined, 'Subject', 'Mathematics (Calculus)'),
+          _buildInfoRow(
+              Icons.science_outlined, 'Subject', 'Mathematics (Calculus)'),
           SizedBox(height: 15.h),
           _buildInfoRow(Icons.school_outlined, 'Class', 'Class 10th'),
           SizedBox(height: 15.h),
-          _buildInfoRow(Icons.videocam_outlined, 'Session Type', 'Live Video Call'),
+          _buildInfoRow(
+              Icons.videocam_outlined, 'Session Type', 'Live Video Call'),
         ],
       ),
     );
@@ -403,7 +416,7 @@ class _TeacherSearchingScreenState extends State<TeacherSearchingScreen>
         Container(
           padding: EdgeInsets.all(10.w),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withValues(alpha: 1.0),
             borderRadius: BorderRadius.circular(12.r),
           ),
           child: Icon(icon, color: Colors.blueAccent, size: 24.sp),
@@ -412,8 +425,13 @@ class _TeacherSearchingScreenState extends State<TeacherSearchingScreen>
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label, style: TextStyle(color: Colors.white60, fontSize: 12.sp)),
-            Text(value, style: TextStyle(color: Colors.white, fontSize: 14.sp, fontWeight: FontWeight.bold)),
+            Text(label,
+                style: TextStyle(color: Colors.white60, fontSize: 12.sp)),
+            Text(value,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.bold)),
           ],
         ),
       ],

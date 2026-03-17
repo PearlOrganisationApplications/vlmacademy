@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widgets/animated_button.dart';
+import '../../widgets/animated_button.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});

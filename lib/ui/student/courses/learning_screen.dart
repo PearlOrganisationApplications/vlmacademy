@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_text_styles.dart';
-import '../../core/utils/formatters.dart';
-import '../../data/sources/mock_data_source.dart';
-import '../../data/models/course_model.dart';
-import '../widgets/custom_card.dart';
-import '../widgets/empty_state.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_text_styles.dart';
+import '../../../core/utils/formatters.dart';
+import '../../../data/sources/mock_data_source.dart';
+import '../../../data/models/course_model.dart';
+import '../../widgets/custom_card.dart';
+import '../../widgets/empty_state.dart';
 
 class LearningScreen extends StatefulWidget {
   const LearningScreen({super.key});

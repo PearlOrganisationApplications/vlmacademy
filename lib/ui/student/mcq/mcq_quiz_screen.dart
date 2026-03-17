@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../../../../core/theme/app_colors.dart';
 import 'dart:ui';
-import '../../core/theme/app_text_styles.dart';
-import '../../core/constants/app_images.dart';
-import '../shared/background_screen.dart';
+import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/constants/app_images.dart';
+
+import '../../shared/background_screen.dart';
 
 class McqQuizScreen extends StatefulWidget {
   const McqQuizScreen({super.key});
@@ -22,24 +24,24 @@ class _McqQuizScreenState extends State<McqQuizScreen> {
       useSafeArea: false,
       backgroundColor: const Color(0xFF020617),
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.w),
-          child: Column(
-            children: [
-              SizedBox(height: 10.h),
-              _buildTopBranding(),
-              SizedBox(height: 20.h),
-              _buildStatsBar(),
-              SizedBox(height: 24.h),
-              _buildProgressBar(),
-              SizedBox(height: 24.h),
-              Expanded(
-                child: _buildQuestionCard(),
-              ),
-              SizedBox(height: 30.h),
-              _buildNextButton(),
-              SizedBox(height: 30.h),
-            ],
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.w),
+            child: Column(
+              children: [
+                SizedBox(height: 10.h),
+                _buildTopBranding(),
+                SizedBox(height: 20.h),
+                _buildStatsBar(),
+                SizedBox(height: 24.h),
+                _buildProgressBar(),
+                SizedBox(height: 24.h),
+                _buildQuestionCard(),
+                SizedBox(height: 30.h),
+                _buildNextButton(),
+                SizedBox(height: 30.h),
+              ],
+            ),
           ),
         ),
       ),
@@ -49,6 +51,13 @@ class _McqQuizScreenState extends State<McqQuizScreen> {
   Widget _buildTopBranding() {
     return Row(
       children: [
+        IconButton(
+          onPressed: () => Navigator.pop(context),
+          padding: EdgeInsets.zero,
+          constraints: const BoxConstraints(),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white, size: 20.sp),
+        ),
+        SizedBox(width: 10.w),
         Image.asset(
           AppImages.vlmLogo,
           height: 32.h,
@@ -62,13 +71,6 @@ class _McqQuizScreenState extends State<McqQuizScreen> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const Spacer(),
-        // Mocking status bar elements
-        Icon(Icons.signal_cellular_4_bar, color: Colors.white, size: 14.sp),
-        SizedBox(width: 4.w),
-        Text('5G', style: TextStyle(color: Colors.white, fontSize: 10.sp)),
-        SizedBox(width: 8.w),
-        Icon(Icons.battery_full, color: Colors.white, size: 14.sp),
       ],
     );
   }
@@ -76,13 +78,6 @@ class _McqQuizScreenState extends State<McqQuizScreen> {
   Widget _buildStatsBar() {
     return Row(
       children: [
-        IconButton(
-          onPressed: () => Navigator.pop(context),
-          padding: EdgeInsets.zero,
-          constraints: const BoxConstraints(),
-          icon: Icon(Icons.arrow_back_ios, color: Colors.white, size: 20.sp),
-        ),
-        const Spacer(),
         Text(
           'Question ',
           style: TextStyle(color: Colors.white70, fontSize: 16.sp),
@@ -109,7 +104,8 @@ class _McqQuizScreenState extends State<McqQuizScreen> {
             ),
             Row(
               children: [
-                Icon(FontAwesomeIcons.clock, color: Colors.orangeAccent, size: 14.sp),
+                Icon(FontAwesomeIcons.clock,
+                    color: Colors.orangeAccent, size: 14.sp),
                 SizedBox(width: 4.w),
                 Text(
                   '12:35',
@@ -134,7 +130,7 @@ class _McqQuizScreenState extends State<McqQuizScreen> {
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(22.r),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        border: Border.all(color: AppColors.primary),
       ),
       child: Stack(
         children: [
@@ -192,7 +188,7 @@ class _McqQuizScreenState extends State<McqQuizScreen> {
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(24.r),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+        border: Border.all(color: AppColors.primary),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.2),
@@ -249,10 +245,14 @@ class _McqQuizScreenState extends State<McqQuizScreen> {
         duration: const Duration(milliseconds: 300),
         padding: EdgeInsets.all(12.w),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.cyanAccent.withValues(alpha: 0.1) : Colors.white.withValues(alpha: 0.1),
+          color: isSelected
+              ? Colors.cyanAccent.withValues(alpha: 0.1)
+              : Colors.white.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
-            color: isSelected ? Colors.cyanAccent : Colors.white.withValues(alpha: 0.1),
+            color: isSelected
+                ? Colors.cyanAccent
+                : Colors.white.withValues(alpha: 0.1),
             width: isSelected ? 2 : 1,
           ),
           boxShadow: [
@@ -271,8 +271,11 @@ class _McqQuizScreenState extends State<McqQuizScreen> {
               height: 36.w,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: isSelected ? Colors.cyanAccent : Colors.white54),
-                color: isSelected ? Colors.cyanAccent.withValues(alpha: 0.2) : Colors.transparent,
+                border: Border.all(
+                    color: isSelected ? Colors.cyanAccent : Colors.white54),
+                color: isSelected
+                    ? Colors.cyanAccent.withValues(alpha: 0.2)
+                    : Colors.transparent,
               ),
               child: Center(
                 child: Text(

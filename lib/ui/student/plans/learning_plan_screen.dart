@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:vlm_academy/ui/shared/background_screen.dart';
 
-import '../../../core/constants/app_images.dart';
-import '../../../core/routes/app_routes.dart';
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_text_styles.dart';
-import '../../shared/background_screen.dart';
+import '../../../../core/constants/app_images.dart';
+import '../../../../core/routes/app_routes.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_text_styles.dart';
 
 class LearningPlanScreen extends StatefulWidget {
   const LearningPlanScreen({super.key});
@@ -94,7 +94,8 @@ class _LearningPlanScreenState extends State<LearningPlanScreen> {
                     SizedBox(height: 8.h),
                     Text(
                       'Unlock your full potential with our premium features',
-                      style: AppTextStyles.bodySmall.copyWith(color: Colors.white70),
+                      style: AppTextStyles.bodySmall
+                          .copyWith(color: Colors.white70),
                       textAlign: TextAlign.center,
                     ),
                   ],
@@ -155,11 +156,13 @@ class _LearningPlanScreenState extends State<LearningPlanScreen> {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28.r)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(28.r)),
         ),
         child: Text(
           'Activate Plan for Trial ₹1',
-          style: AppTextStyles.buttonLarge.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+          style: AppTextStyles.buttonLarge
+              .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -211,7 +214,8 @@ class _PlanCard extends StatelessWidget {
                 top: -12.h,
                 right: 20.w,
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
                   decoration: BoxDecoration(
                     color: plan['color'],
                     borderRadius: BorderRadius.circular(12.r),
@@ -238,17 +242,20 @@ class _PlanCard extends StatelessWidget {
                       color: plan['color'].withOpacity(0.2),
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(plan['icon'], color: plan['color'], size: 28.sp),
+                    child:
+                        Icon(plan['icon'], color: plan['color'], size: 28.sp),
                   ),
                   SizedBox(height: 16.h),
                   Text(
                     plan['name'],
-                    style: AppTextStyles.h5.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                    style: AppTextStyles.h5.copyWith(
+                        color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 8.h),
                   // Trial Badge
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
                     decoration: BoxDecoration(
                       color: plan['color'].withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12.r),
@@ -256,7 +263,10 @@ class _PlanCard extends StatelessWidget {
                     ),
                     child: Text(
                       '3 Days Free Trial',
-                      style: TextStyle(color: plan['color'], fontSize: 10.sp, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          color: plan['color'],
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                   SizedBox(height: 20.h),
@@ -276,11 +286,13 @@ class _PlanCard extends StatelessWidget {
                     children: [
                       Text(
                         '₹${plan['price']}',
-                        style: AppTextStyles.h3.copyWith(color: plan['color'], fontWeight: FontWeight.bold),
+                        style: AppTextStyles.h3.copyWith(
+                            color: plan['color'], fontWeight: FontWeight.bold),
                       ),
                       Text(
                         '/mo',
-                        style: TextStyle(color: Colors.white70, fontSize: 14.sp),
+                        style:
+                            TextStyle(color: Colors.white70, fontSize: 14.sp),
                       ),
                     ],
                   ),

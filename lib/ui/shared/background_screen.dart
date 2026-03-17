@@ -97,11 +97,17 @@ class BackgroundScreen extends StatelessWidget {
       content = SafeArea(child: content);
     }
 
-    // Wrap with WillPopScope if provided
+    // Wrap with PopScope if provided
     if (onWillPop != null) {
-      // ignore: deprecated_member_use
-      content = WillPopScope(
-        onWillPop: onWillPop,
+      content = PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) async {
+          if (didPop) return;
+          final shouldPop = await onWillPop!();
+          if (shouldPop && context.mounted) {
+            Navigator.of(context).pop();
+          }
+        },
         child: content,
       );
     }

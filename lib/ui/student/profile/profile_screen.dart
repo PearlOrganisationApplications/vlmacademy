@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../data/sources/mock_data_source.dart';
+import '../../../data/sources/mock_data_source.dart';
 import 'edit_profile_screen.dart';
-import '../shared/notifications_screen.dart';
-import 'rewards_center_screen.dart';
-import 'wallet_screen.dart';
-import 'terms_conditions_screen.dart';
-import 'help_center_screen.dart';
+import '../../shared/notifications_screen.dart';
+import '../rewards/rewards_center_screen.dart';
+import '../wallet/wallet_screen.dart';
+import '../settings/terms_conditions_screen.dart';
+import '../settings/help_center_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -65,7 +65,7 @@ class ProfileScreen extends StatelessWidget {
                                 const Color(0xFF111827), // Dark navy for card
                             borderRadius: BorderRadius.circular(24),
                             border: Border.all(
-                                color: cardBorderColor.withOpacity(0.8),
+                                color: cardBorderColor.withValues(alpha: 0.8),
                                 width: 2),
                           ),
                           child: Column(
@@ -85,7 +85,7 @@ class ProfileScreen extends StatelessWidget {
                               Text(
                                 user.email,
                                 style: TextStyle(
-                                  color: Colors.white.withOpacity(0.7),
+                                  color: Colors.white.withValues(alpha: 0.7),
                                   fontSize: 14,
                                 ),
                               ),

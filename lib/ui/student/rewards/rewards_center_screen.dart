@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_text_styles.dart';
-import '../widgets/glassmorphic_card.dart';
-import '../widgets/animated_button.dart';
-import 'daily_mcq_screen.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_text_styles.dart';
+import '../../widgets/glassmorphic_card.dart';
+import '../../widgets/animated_button.dart';
+import '../mcq/daily_mcq_screen.dart';
 import 'spin_win_screen.dart';
 import 'refer_earn_screen.dart';
+import '../../shared/background_screen.dart';
 
 class RewardsCenterScreen extends StatefulWidget {
   const RewardsCenterScreen({super.key});

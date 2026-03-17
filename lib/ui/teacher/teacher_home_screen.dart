@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:vlm_academy/ui/student/dashboard/student_dashboard.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
-import '../student/student_dashboard.dart';
 
 class TeacherHomeScreen extends StatelessWidget {
   const TeacherHomeScreen({super.key});
@@ -141,7 +141,8 @@ class TeacherHomeScreen extends StatelessWidget {
             GestureDetector(
               onTap: () {
                 Navigator.of(context, rootNavigator: true).pushReplacement(
-                  MaterialPageRoute(builder: (context) => const StudentDashboard()),
+                  MaterialPageRoute(
+                      builder: (context) => const StudentDashboard()),
                 );
               },
               child: _buildIconButton(Icons.swap_horiz, hasBadge: false),
@@ -440,16 +441,17 @@ class TeacherHomeScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: isCompleted
-                      ? const Color(0xFF10B981).withOpacity(0.1)
+                      ? const Color(0xFF10B981).withValues(alpha: 0.1)
                       : isActive
-                          ? const Color(0xFF3B82F6).withOpacity(0.1)
+                          ? const Color(0xFF3B82F6).withValues(alpha: 0.1)
                           : Colors.transparent,
                   border: Border.all(
                     color: isCompleted
                         ? const Color(0xFF10B981)
                         : isActive
                             ? const Color(0xFF3B82F6)
-                            : AppColors.textSecondaryDark.withOpacity(0.2),
+                            : AppColors.textSecondaryDark
+                                .withValues(alpha: 0.2),
                     width: 2,
                   ),
                 ),

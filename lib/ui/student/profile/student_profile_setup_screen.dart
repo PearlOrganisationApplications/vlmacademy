@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vlm_academy/core/constants/app_images.dart';
+import 'package:vlm_academy/ui/shared/background_screen.dart';
 
-import '../../../core/routes/app_routes.dart';
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_text_styles.dart';
-import '../../shared/background_screen.dart';
+import '../../../../core/routes/app_routes.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_text_styles.dart';
 
 class StudentProfileSetupScreen extends StatefulWidget {
   const StudentProfileSetupScreen({super.key});

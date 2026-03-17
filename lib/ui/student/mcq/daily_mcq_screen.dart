@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:vlm_academy/core/theme/app_colors.dart';
-import '../../core/theme/app_text_styles.dart';
-import '../shared/background_screen.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_text_styles.dart';
+import '../../shared/background_screen.dart';
 import 'mcq_quiz_screen.dart';
 import 'dart:ui';
 

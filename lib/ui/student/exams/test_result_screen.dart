@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_text_styles.dart';
-import '../../data/models/test_model.dart';
-import '../widgets/glassmorphic_card.dart';
-import '../widgets/animated_button.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_text_styles.dart';
+import '../../../data/models/test_model.dart';
+import '../../widgets/glassmorphic_card.dart';
+import '../../widgets/animated_button.dart';
 
 class TestResultScreen extends StatelessWidget {
   final TestModel test;

@@ -3,13 +3,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:provider/provider.dart';
-import '../../providers/navigation_provider.dart';
+import '../../../providers/navigation_provider.dart';
 
 import 'home_screen.dart';
-import 'chat/ask_doubt_screen.dart';
-import 'daily_mcq_screen.dart';
-import 'profile_screen.dart';
-import 'tests_screen.dart';
+import '../chat/ask_doubt_screen.dart';
+import '../mcq/daily_mcq_screen.dart';
+import '../profile/profile_screen.dart';
+import '../exams/tests_screen.dart';
 
 class StudentDashboard extends StatefulWidget {
   const StudentDashboard({super.key});

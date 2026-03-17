@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../data/models/course_model.dart';
-import '../../../../data/repositories/course_repository.dart';
+import '../../../../../data/models/course_model.dart';
+import '../../../../../data/repositories/course_repository.dart';
 import 'widgets/CourseCard.dart';
 
 class PopularCoursesScreen extends StatefulWidget {

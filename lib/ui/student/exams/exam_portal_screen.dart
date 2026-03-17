@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_text_styles.dart';
-import '../../data/models/test_model.dart';
-import '../widgets/animated_button.dart';
-import '../widgets/glassmorphic_card.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_text_styles.dart';
+import '../../../data/models/test_model.dart';
+import '../../widgets/animated_button.dart';
+import '../../widgets/glassmorphic_card.dart';
 
 class ExamPortalScreen extends StatefulWidget {
   final TestModel test;

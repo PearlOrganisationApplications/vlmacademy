@@ -3,13 +3,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:ui';
 import 'package:provider/provider.dart';
-import '../../providers/navigation_provider.dart';
+import '../../../../providers/navigation_provider.dart';
 
-import '../../core/constants/app_images.dart';
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_text_styles.dart';
-import '../shared/background_screen.dart';
-import 'chat/ai_chat_screen.dart';
+import '../../../../core/constants/app_images.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_text_styles.dart';
+import '../../shared/background_screen.dart';
+import '../chat/ai_chat_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -95,9 +95,9 @@ class HomeScreen extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.08),
+        color: Colors.white.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -229,12 +229,12 @@ class HomeScreen extends StatelessWidget {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: Colors.white.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(24.r),
-        border: Border.all(color: color.withOpacity(0.3), width: 1.w),
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 1.w),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             blurRadius: 10,
             spreadRadius: 1,
           )
@@ -324,9 +324,9 @@ class HomeScreen extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: Colors.white.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(24.r),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
       child: Column(
         children: [
@@ -385,9 +385,9 @@ class HomeScreen extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: Colors.white.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(24.r),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -432,7 +432,7 @@ class HomeScreen extends StatelessWidget {
             width: double.infinity,
             padding: EdgeInsets.symmetric(vertical: 6.h),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
+              color: Colors.white.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(20.r),
               border: Border.all(color: Colors.white10),
             ),
@@ -492,14 +492,14 @@ class HomeScreen extends StatelessWidget {
     return Container(
       width: 150.w,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: Colors.white.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(16.r),
         image: DecorationImage(
           image: NetworkImage(
               'https://picsum.photos/200/300?sig=${DateTime.now().millisecondsSinceEpoch}'),
           fit: BoxFit.cover,
           colorFilter:
-              ColorFilter.mode(Colors.black.withOpacity(0.3), BlendMode.darken),
+              ColorFilter.mode(Colors.black.withValues(alpha: 0.3), BlendMode.darken),
         ),
       ),
       child: Stack(

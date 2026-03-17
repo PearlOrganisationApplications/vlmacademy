@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:ui';
 import '../../shared/background_screen.dart';
-import '../../../core/theme/app_text_styles.dart';
+import '../../../../core/theme/app_text_styles.dart';
 
 class SessionFeedbackScreen extends StatefulWidget {
   const SessionFeedbackScreen({super.key});
@@ -95,12 +95,12 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
           width: double.infinity,
           padding: EdgeInsets.all(24.w),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.8),
+            color: Colors.white.withValues(alpha: 0.8),
             borderRadius: BorderRadius.circular(30.r),
-            border: Border.all(color: Colors.white.withOpacity(0.2)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               )
@@ -128,7 +128,7 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
                         index < _rating ? Icons.star : Icons.star_border,
                         color: index < _rating
                             ? Colors.amber
-                            : Colors.amber.withOpacity(0.3),
+                            : Colors.amber.withValues(alpha: 0.3),
                         size: 40.sp,
                       ),
                     ),
@@ -194,16 +194,17 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
         duration: const Duration(milliseconds: 200),
         padding: EdgeInsets.symmetric(vertical: 12.h),
         decoration: BoxDecoration(
-          color: isSelected ? activeColor.withOpacity(0.1) : Colors.white,
+          color: isSelected ? activeColor.withValues(alpha: 0.1) : Colors.white,
           borderRadius: BorderRadius.circular(20.r),
           border: Border.all(
-            color: isSelected ? activeColor : Colors.grey.withOpacity(0.2),
+            color:
+                isSelected ? activeColor : Colors.grey.withValues(alpha: 0.2),
             width: 2,
           ),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: activeColor.withOpacity(0.2),
+                    color: activeColor.withValues(alpha: 0.2),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   )
@@ -242,9 +243,9 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
           width: double.infinity,
           padding: EdgeInsets.all(20.w),
           decoration: BoxDecoration(
-            color: Colors.blue.withOpacity(0.05),
+            color: Colors.blue.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(24.r),
-            border: Border.all(color: Colors.blue.withOpacity(0.1)),
+            border: Border.all(color: Colors.blue.withValues(alpha: 0.1)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -276,11 +277,13 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
                   filled: true,
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(24.r),
-                    borderSide: BorderSide(color: Colors.blue.withOpacity(0.1)),
+                    borderSide:
+                        BorderSide(color: Colors.blue.withValues(alpha: 0.1)),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(24.r),
-                    borderSide: BorderSide(color: Colors.blue.withOpacity(0.1)),
+                    borderSide:
+                        BorderSide(color: Colors.blue.withValues(alpha: 0.1)),
                   ),
                 ),
               ),
@@ -304,7 +307,7 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
         borderRadius: BorderRadius.circular(30.r),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF007BFF).withOpacity(0.3),
+            color: const Color(0xFF007BFF).withValues(alpha: 0.3),
             blurRadius: 15,
             offset: const Offset(0, 8),
           )

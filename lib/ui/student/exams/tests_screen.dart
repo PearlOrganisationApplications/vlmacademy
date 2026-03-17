@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_text_styles.dart';
-import '../../data/sources/mock_data_source.dart';
-import '../../data/models/test_model.dart';
-import '../widgets/custom_card.dart';
-import '../widgets/custom_button.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_text_styles.dart';
+import '../../../data/sources/mock_data_source.dart';
+import '../../../data/models/test_model.dart';
+import '../../widgets/custom_card.dart';
+import '../../widgets/custom_button.dart';
 
 class TestsScreen extends StatelessWidget {
   const TestsScreen({super.key});

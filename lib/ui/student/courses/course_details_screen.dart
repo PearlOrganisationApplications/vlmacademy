@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
-import '../../data/models/course_model.dart';
-import '../../core/theme/app_colors.dart';
-import 'payment_methods_screen.dart';
+import '../../../data/models/course_model.dart';
+import '../../../core/theme/app_colors.dart';
+import '../wallet/payment_methods_screen.dart';
+import '../../shared/background_screen.dart';
 
 class CourseDetailsScreen extends StatefulWidget {
   final CourseModel course;

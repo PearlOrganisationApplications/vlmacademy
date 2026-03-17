@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../core/theme/app_text_styles.dart';
-import '../../../core/constants/app_images.dart';
+import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/constants/app_images.dart';
 import '../../shared/background_screen.dart';
 import 'dart:ui';
 import 'session_feedback_screen.dart';
 import 'package:provider/provider.dart';
-import '../../../providers/chat_provider.dart';
-import '../../../data/models/chat_message.dart';
+import '../../../../providers/chat_provider.dart';
+import '../../../../data/models/chat_message.dart';
 
 class AiChatScreen extends StatefulWidget {
   const AiChatScreen({super.key});
@@ -118,7 +118,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
               decoration: BoxDecoration(
-                color: Colors.redAccent.withOpacity(0.8),
+                color: Colors.redAccent.withValues(alpha: 0.8),
                 borderRadius: BorderRadius.circular(10.r),
               ),
               child: Text(
@@ -135,9 +135,9 @@ class _AiChatScreenState extends State<AiChatScreen> {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(20.r),
-              border: Border.all(color: Colors.white.withOpacity(0.3)),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
             ),
             child: Column(
               children: [
@@ -180,7 +180,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
               child: Container(
                 padding: EdgeInsets.all(16.w),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.9),
+                  color: Colors.white.withValues(alpha: 0.9),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20.r),
                     bottomLeft: Radius.circular(20.r),
@@ -229,7 +229,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
                 border: Border.all(color: Colors.purpleAccent, width: 2),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.purpleAccent.withOpacity(0.5),
+                    color: Colors.purpleAccent.withValues(alpha: 0.5),
                     blurRadius: 10,
                     spreadRadius: 2,
                   ),
@@ -252,8 +252,9 @@ class _AiChatScreenState extends State<AiChatScreen> {
                   child: Container(
                     padding: EdgeInsets.all(16.w),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.85),
-                      border: Border.all(color: Colors.white.withOpacity(0.2)),
+                      color: Colors.white.withValues(alpha: 0.85),
+                      border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.2)),
                     ),
                     child: Text(
                       message,
@@ -302,9 +303,9 @@ class _AiChatScreenState extends State<AiChatScreen> {
               width: 85.w,
               padding: EdgeInsets.all(8.w),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.15),
+                color: Colors.white.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(15.r),
-                border: Border.all(color: Colors.white.withOpacity(0.2)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -385,7 +386,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.blue.withOpacity(0.3),
+                    color: Colors.blue.withValues(alpha: 0.3),
                     blurRadius: 8,
                     offset: const Offset(0, 4),
                   ),

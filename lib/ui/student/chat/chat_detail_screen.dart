@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../core/theme/app_text_styles.dart';
+import '../../../../core/theme/app_text_styles.dart';
 import '../../shared/background_screen.dart';
 import 'dart:ui';
 import 'session_feedback_screen.dart';
@@ -61,9 +61,9 @@ class ChatDetailScreen extends StatelessWidget {
           margin: EdgeInsets.all(20.w),
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.15),
+            color: Colors.white.withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(25.r),
-            border: Border.all(color: Colors.white.withOpacity(0.2)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
           ),
           child: Row(
             children: [
@@ -113,7 +113,7 @@ class ChatDetailScreen extends StatelessWidget {
                           padding: EdgeInsets.symmetric(
                               horizontal: 8.w, vertical: 4.h),
                           decoration: BoxDecoration(
-                            color: Colors.orangeAccent.withOpacity(0.8),
+                            color: Colors.orangeAccent.withValues(alpha: 0.8),
                             borderRadius: BorderRadius.circular(10.r),
                           ),
                           child: Text(
@@ -196,7 +196,7 @@ class ChatDetailScreen extends StatelessWidget {
                         : null,
                     color: isSender
                         ? null
-                        : const Color(0xFF8B5CF6).withOpacity(0.8),
+                        : const Color(0xFF8B5CF6).withValues(alpha: 0.8),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20.r),
                       topRight: Radius.circular(20.r),
@@ -322,7 +322,7 @@ class ChatDetailScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(30.r),
                   boxShadow: [
                     BoxShadow(
-                        color: Colors.blue.withOpacity(0.3),
+                        color: Colors.blue.withValues(alpha: 0.3),
                         blurRadius: 10,
                         offset: const Offset(0, 5)),
                   ],
